@@ -1,0 +1,120 @@
+.reservation{
+    position: relative;
+}
+.booking_bonus{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 150px;
+    color: white;
+    background-color: rgb(16, 16, 103);
+}
+.booking_bonus:first-child{
+    padding-top: 30px;
+
+}
+/* search */
+.searchBar{
+    padding-top: 10px;
+    margin:10px;
+    position: relative     ;
+    /* top: 0; */
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid black;
+    border-radius: 20px;
+    
+}
+.searchBar_filter{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.searchBar_filter span{
+    margin-left: 8px;
+    font-weight: 700;
+}
+/* room filter */
+.roomTypeFilter {
+    width: 150px;
+    cursor: pointer;
+}
+
+.roomTypeInput:hover{
+    
+}
+/* price filter */
+.priceFilter{
+    width: 160px;
+}
+.priceFilter > .custom-slider{
+    cursor: pointer;
+}
+/* date */
+.searchBar_date{
+    width: 330px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.searchBar_date > span:hover{
+    opacity: 0.5;
+}
+.fa-calendar-days:hover{
+    opacity: 0.5;
+}
+.searchBar_calendar{
+    position: absolute;
+    top: 0 ;
+    right: 0;
+    cursor:pointer
+}
+.fa-calendar-days{
+    font-size: 20px;
+    color: rgb(45, 174, 45);
+    margin-right: 4px;
+}
+
+.searchBar_button{
+    height: 36px;
+    width: 70px;
+    border-radius: 8px;
+    background-color: rgb(26, 26, 190);
+    border: 2px solid white;
+    color: white;
+}
+.searchBar_button:hover{
+    cursor: pointer;
+    opacity: 0.7;
+}
+/* -------------------------- */
+/* list room */
+.list_room{
+
+}
+.list_room-items{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 20px 0;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.list_room-items--button{
+    height: 36px;
+    width: 100px;
+    border-radius: 4px;
+    border: none;
+    color: black;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: gold;
+    margin-bottom: 10px;
+}
+.list_room-items--button:hover{
+    opacity: 0.7;    
+    cursor: pointer;
+}

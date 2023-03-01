@@ -1,0 +1,47 @@
+.Home{
+    background-image: url(../../assets/images/home_bg.jpg);
+    background-position: center;
+    /* background-repeat: no-repeat; */
+    /* background-size: cover; */
+    height:500px;
+    /* position: absolute; */
+}
+/* .title{
+    background-color: grey;
+    text-align: center;
+}
+.row1{
+    display: flex;
+    justify-content: center;
+} */
+
+.welcome{
+    position: relative;
+    top:20px;
+    left:30px; 
+    color: gold;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.booking-btn{
+    height: 40px;
+    background-color: yellow;
+    color: black;
+    font-weight: bold;
+    position: relative;
+    bottom: -300px;
+    right: -350px;
+    border: none
+    /* border-radius: 10px; */
+}
+.booking-btn:hover{
+    cursor: pointer;
+    opacity: 0.8;
+
+}
+.view{
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    padding: 10px 0;
+}
