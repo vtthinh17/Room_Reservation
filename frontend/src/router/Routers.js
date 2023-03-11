@@ -3,6 +3,7 @@ import {Routes, Route,Navigate} from 'react-router-dom'
 
 import Home from './../pages/home/Home';
 import Login from './../pages/login/Login';
+import Register from "../pages/register/Register";
 import About from '../pages/about/About';
 import Facilities from '../pages/facilities/Facilities';
 import Feedback from '../pages/feedback/Feedback';
@@ -14,6 +15,7 @@ const Routers = () => {
             <Route path ='/' element={<Navigate to='/home'/>} />
             <Route path ='/home' element={<Home/>} />
             <Route path ='/login' element={<Login/>} />
+            <Route path ='/register' element={<Register/>} />
             <Route path ='/about' element={<About/>} />
             <Route path ='/Facilities' element={<Facilities/>} />
             <Route path ='/feedback' element={<Feedback/>} />
