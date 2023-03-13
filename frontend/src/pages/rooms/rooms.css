@@ -104,7 +104,7 @@
 }
 
 .list_room-items >img{
-    height: 190px;
+    width: 100%;
 }
 
 .list_room-items--description{

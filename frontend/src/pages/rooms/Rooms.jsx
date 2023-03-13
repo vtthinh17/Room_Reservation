@@ -1,6 +1,6 @@
 import React from "react";
 // import { Container, Row, UncontrolledCarousel, Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { DateRange } from 'react-date-range'
 import { useState } from 'react'
@@ -10,14 +10,13 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { format } from 'date-fns';
-import room1 from './../../assets/images/room1.jpg';
-import room2 from './../../assets/images/room2.jpg';
-import room3 from './../../assets/images/room3.jpg';
-import room4 from './../../assets/images/room4.jpg';
+
+
 
 import useFetch from "../../hooks/useFetch";
 const Reservations = () => {
-    const { data, loading, error } = useFetch("/rooms/getRoomByQuery?roomNumber=101")
+    const navigate = useNavigate()
+    const { data, loading, error } = useFetch("/rooms/")
     // ----------Filter------------------
     const roomOptions = [
         { value: 1, label: 'Single' },
@@ -60,42 +59,14 @@ const Reservations = () => {
             thang: date[0].startDate.getMonth() + 1
         })
     }
-    const getRoomDetails = () => {
-        console.log('click booking room number: {room.number}')
+    const getRoomDetails = (id) => {
+        console.log("roomID: ",id)
+        
+        navigate('/booking/'+id, {
+            roomId: id,
+          });
 
     }
-    // fake data
-    // const images = [room1, room2, room3, room4]
-    // const rooms = [
-    //     {
-    //         roomType: 0,
-    //         roomNumber: 101,
-    //         description: ["Only 1 person", "Full amenities","Free wifi"],
-    //         price: 30,
-    //         status: 0,
-    //         dateServe: [],
-    //         image: images[0]
-    //     },
-    //     {
-    //         roomType: 1,
-    //         roomNumber: 102,
-    //         description: ["Best choice for couple","Drinks","Beautiful view"],
-    //         price: 50,
-    //         status: 0,
-    //         dateServe: [],
-    //         image: images[1],
-    //     },
-    //     {
-    //         roomType: 2,
-    //         roomNumber: 103,
-    //         description: ["Suit for 2-3 person or small family","Snacks","Tivi for kids"],
-    //         price: 100,
-    //         status: 0,
-    //         dateServe: [],
-    //         image: images[2],
-    //     }
-    // ]
-
     return (
 
         <div className="reservation">
@@ -175,9 +146,9 @@ const Reservations = () => {
                                                 )}
                                             </ul>
                                             <span className="price">Price: {room.price}$/days</span>
-                                            <Link to='/booking/:room.id'>
-                                                <button className="list_room-items--button" onClick={getRoomDetails}>Booking</button>
-                                            </Link>
+                                            {/* <Link to='/booking/:room.id'> */}
+                                                <button className="list_room-items--button" onClick={()=>{getRoomDetails(room._id)}}>Booking</button>
+                                            {/* </Link> */}
                                         </div>
                                     ))}
                                 </div> 

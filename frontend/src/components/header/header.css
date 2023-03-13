@@ -39,10 +39,11 @@ ul{
     justify-content: space-between;
     /* gap:4; */
 }
-
-button a{
+li> a{
+    color: #000;
     text-decoration: none;
 }
+
 /* toggle login/lougout */
 .login_register{ 
     display: block;
@@ -92,6 +93,7 @@ button a{
 }
 .user_menu li:hover{
     opacity: 0.8;
+    color: #0a58ca;
 }
 
 /* ----------------------------------- */
