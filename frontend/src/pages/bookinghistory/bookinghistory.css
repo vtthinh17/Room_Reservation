@@ -1,0 +1,21 @@
+svg{
+    font-size: 20px;
+    margin-left: 9px;
+}
+img{
+    width: 10%;
+    object-fit: contain;
+}
+.fa-circle-check{
+    color:green;
+}
+.fa-trash-can:hover{
+    cursor: pointer;
+    opacity: 0.7;
+}
+.fa-circle-xmark{
+    color:red;
+}
+.fa-trash-can{
+    color: red;
+}

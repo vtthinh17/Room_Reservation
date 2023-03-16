@@ -33,31 +33,29 @@ ul{
     font-size: 1.1rem;
     margin: 0 10px;
 }
-
+/* ------------------- */
 .nav__right{
-    display:flex ;
-    align-items:center ;
-    gap:4;
+    width: 150px;
+    justify-content: space-between;
+    /* gap:4; */
 }
-.nav__right button{
-    background-color: white;
+li> a{
+    color: #000;
     text-decoration: none;
 }
-button a{
-    text-decoration: none;
-}
+
 /* toggle login/lougout */
+.login_register{ 
+    display: block;
+
+}
 .user_profile{
-    display: none;
-    /* display: flex; */
+    display: flex;
+    cursor: pointer;
+    height: 40px;  
     align-items: center ;
     
 }
-.nav__btns{ 
-    display: block;
-    /* display: none; */
-}
-/* ----------------------------------- */
 .user_profile img{
     margin-top: 8px;
     width: 30px;
@@ -65,6 +63,37 @@ button a{
     border-radius: 50%;
     
 }
-/* .user_name{
-    margin-top: ;
-} */
+.user_profile .user_name{
+    font-size: 16px;
+    margin-left: 8px;
+    margin-bottom: 0;
+}
+.user_profile .user_menu{
+    z-index: 1;
+    display: block;
+    position: absolute;
+    top: 80px;
+    background-color: white;
+}
+.user_menu ul{
+    padding: 0;
+    margin: 0;
+}
+.user_menu li{
+    font-weight: 500;
+    border: 1px solid grey;
+    background-color: #d8c9c9;
+    cursor: pointer;
+    padding: 0 10px;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+.user_menu li:hover{
+    opacity: 0.8;
+    color: #0a58ca;
+}
+
+/* ----------------------------------- */

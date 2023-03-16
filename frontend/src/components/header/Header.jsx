@@ -1,50 +1,59 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./header.css";
-import {Container, Row, Button} from 'reactstrap';
-import {NavLink, Link} from 'react-router-dom';
+import { Container, Row } from 'reactstrap';
+import { NavLink, Link } from 'react-router-dom';
 import logo from './../../assets/images/logo.png';
 import anonymous from './../../assets/images/anonymous_avatar.png';
-import { MDBIcon } from 'mdb-react-ui-kit';
-const nav__links =[
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOut } from '@fortawesome/free-solid-svg-icons';
+import { useState } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+import authAction from "../../action/AuthAction";
+const nav__links = [
     {
-        path:'/home',
+        path: '/home',
         display: 'Home'
     },
     {
-        path:'/about',
+        path: '/about',
         display: 'About'
     },
     {
-        path:'/facilities',
+        path: '/facilities',
         display: 'Our Facilities'
     },
     {
-        path:'/rooms/',
+        path: '/rooms/',
         display: 'Rooms'
     },
     {
-        path:'/feedback',
+        path: '/feedback',
         display: 'Feedback'
     },
 ]
 const Header = () => {
+    const { user, dispatch } = useContext(AuthContext);
+    const [profileEdit, setProfileEdit] = useState(false)
+    const handleSignOut = () => {
+        dispatch(authAction.logout());
+    }
     return (
         <header className="header">
             <Container>
                 <Row>
                     <div className="nav__wrapper ">
-                       {/* logo  */}
-                            <div className="logo">
+                        {/* logo  */}
+                        <div className="logo">
                             <Link to='/home'><img src={logo} alt="" /></Link>
-                                
-                            </div>
+
+                        </div>
                         {/* logo end */}
 
                         <div className="navigation">
                             <ul className="menu">
                                 {
-                                    nav__links.map((item,index) => (
-                                        <li className="nav__item nav__item-active">
+                                    nav__links.map((item, index) => (
+                                        <li key={index} className="nav__item nav__item-active">
                                             <NavLink to={item.path}>{item.display}</NavLink>
                                         </li>
                                     ))
@@ -53,22 +62,26 @@ const Header = () => {
                         </div>
 
                         <div className="nav__right ">
-                            {/* check is */}
-                            <div className="user_profile">
-                                <img src={anonymous} alt="Avatar"/>
-                                <p className="user_name">UserName</p>
-                                
-                                <MDBIcon fas icon="sign-out-alt" />Icon
-                            </div>
+                            {/* if isLogin => hien thi profile else => hien thi Login/Logout */}
+                            {
+                                user
+                                    ? (<div className="user_profile" onClick={() => setProfileEdit(!profileEdit)}>
+                                        <img src={anonymous} alt="Avatar" />
+                                        <p className="user_name">Hi, <b>{user.userName}</b></p>
+                                        {profileEdit && <div className="user_menu">
+                                            <ul>
+                                                <li><Link to='/user/userprofile/'>Edit profile</Link></li>
+                                                <li><Link to='/user/bookinghistory'>Booking history</Link></li>
+                                                <li onClick={handleSignOut}>Sign out <FontAwesomeIcon icon={faSignOut} /></li>
+                                            </ul>
+                                        </div>}
+                                    </div>)
 
-                            <div className="nav__btns">
-                                <Button className="btn">
-                                    <Link to='/login'>Login/Register</Link>
-                                </Button>
-                                {/* <Button className="btn">
-                                    <Link to='/register'>Register</Link>
-                                </Button> */}
-                            </div>
+                                    :(<div className="login_register">
+                                        <Link to='/login'>Login</Link> / <Link to='/register'>Register</Link>
+                                    </div>)
+                            }
+
                         </div>
 
                     </div>

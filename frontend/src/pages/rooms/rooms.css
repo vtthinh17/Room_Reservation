@@ -103,6 +103,18 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+.list_room-items >img{
+    width: 100%;
+}
+
+.list_room-items--description{
+    margin-top: 10px;
+    height: 100px;
+}
+.price{
+    margin-bottom: 10px;
+    font-size: 24px;
+}
 .list_room-items--button{
     height: 36px;
     width: 100px;
@@ -112,7 +124,7 @@
     font-size: 18px;
     font-weight: 500;
     background-color: gold;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 .list_room-items--button:hover{
     opacity: 0.7;    

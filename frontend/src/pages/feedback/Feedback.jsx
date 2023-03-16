@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import "./feedback.css";
 import { Container,Row } from 'reactstrap';
 import logo from './../../assets/images/feedback1.jpg';
-
+import { AuthContext } from "../../contexts/AuthContext";
 
 function Feedback() {
+    const { user } = useContext(AuthContext)
     const [value, setValue] = useState('');
 
     return (
@@ -14,7 +15,7 @@ function Feedback() {
             <Container className='feedback'>
                 <Row>
                     <h1 className='text-center page-title'>We're value your feedback!</h1>
-                    <p>
+                    <p>Hi <b>{user.userName}</b>, 
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry.
  Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
   when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
