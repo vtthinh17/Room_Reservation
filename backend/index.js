@@ -5,6 +5,7 @@ import roomsRoute from "./app/routes/rooms.js";
 import authRoute from "./app/routes/auth.js";
 import usersRoute from "./app/routes/users.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 const app = express();
 dotenv.config();
 
@@ -21,6 +22,7 @@ mongoose.connection.on("disconnected", () => {
 });
 
 //middlewares
+app.use(cors())
 app.use(cookieParser())
 app.use(express.json());
 
@@ -29,5 +31,5 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.listen(8000,()=>{
     connect()
-    console.log("Backend running on port 8000...")
+    console.log("BackendServer is running at URL: http://localhost:8000/api")
 })

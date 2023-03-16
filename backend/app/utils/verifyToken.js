@@ -2,7 +2,8 @@ import jwt from "jsonwebtoken"
 import { generateError } from "./generateErr.js"
 // middleware
 export const verifyToken = (req, res, next) => {
-    const token = req.cookies ? req.cookies.access_token:'';
+    const token = req.headers.authorization ? req.headers.authorization : '';
+    // const token = req.cookies ? req.cookies.access_token:'';
     if (!token) {
       return next(generateError(401, "You are not authenticated!"));
     }

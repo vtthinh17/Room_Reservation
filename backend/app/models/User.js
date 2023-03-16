@@ -5,10 +5,10 @@ const UserSchema = new mongoose.Schema(
         userName: {type: String, required: true,unique: true},
         passWord: {type: String, required: true},     
         // optional: khi login co the vao phan profile de them/chinh sua
+        fullName: {type: String},
         isAdmin: {type: Boolean, default: false},
         email: {type: String,unique: true},
-        address: {type: String},
-        avatar: {type: String},   
+        address: {type: String},   
         phone:{type: String},
         // chua danh sach cac thong tin phong da dat de confirm/cancel
         bookingHistory:{type: [String]},
