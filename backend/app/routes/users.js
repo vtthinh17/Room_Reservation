@@ -19,7 +19,7 @@ router.get("/:id",verifyUser, getUser);
 // GET All
 router.get("/",verifyAdmin, getUsers);
 // Update
-router.put("/:id",verifyUser, updateUser)
+router.put("/update/:id",verifyUser, updateUser)
 // Delete
 router.delete("/:id",verifyAdmin,deleteUser)
 

@@ -40,11 +40,36 @@ export const updateRoom = async (req, res) => {
       next(err);
     }
   };
+  // export const getRooms = async (req, res, next) => {
+  //   try {
+  //     const rooms = await Room.find();
+  //     res.status(200).json(rooms);
+  //     console.log('>> Get all rooms success!')
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // };
+
   export const getRooms = async (req, res, next) => {
     try {
       const rooms = await Room.find();
-      res.status(200).json(rooms);
+      const list = await Promise.all(
+        rooms.map((room) => {
+          return Room.findById(room._id);
+        })
+      );
+      res.status(200).json(list)
       console.log('>> Get all rooms success!')
+    } catch (err) {
+      next(err);
+    }
+  };
+  export const getRoomByQuery = async (req, res, next) => {
+    // const { min, max, ...others } = req.query;
+    try {
+     const rooms = await Room.find(req.query)
+      res.status(200).json(rooms);
+      console.log('>> Get by query success!')
     } catch (err) {
       next(err);
     }
