@@ -78,12 +78,9 @@ const Reservations = () => {
             </div>
             {
                 loading
-                    ? ("loading")
+                    ? (<h3 className='text-center'>Loading data...</h3>)
                     : (
-                        <>  {console.log(">>>data:", data)}
-                            {console.log(">>>loading:", loading)}
-                            {console.log(">>>error:", error)}
-
+                        <>  {console.log(">>>fetch Room datas:", data)}
                             <div className="searchBar">
                                 <h2 >Filter</h2>
                                 {/* room type filter */}
@@ -134,7 +131,8 @@ const Reservations = () => {
                             <div className="container">
 
                                 {data 
-                                ? <div className="row list_room ">
+                                ? 
+                                <div className="row list_room ">
                                     {data.map((room) => (
                                         <div className="col-4 list_room-items" key={room._id}>
                                             {console.log(room)}

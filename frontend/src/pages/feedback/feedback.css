@@ -1,9 +1,56 @@
-.feedback h1{
-font-family: 'Times New Roman', Times, serif;
-}
-img{
-    width: 80%;
-}
-.ql-container{
-    height: 150px;
-}
+    .feedback h1{
+    font-family: 'Times New Roman', Times, serif;
+    }
+    .ql-container{
+        height: 150px;
+    }
+    /* danh sach feedback */
+    .post_lists{
+        background-color: rgb(251, 233, 233);
+    }
+    .post{
+        margin-bottom: 8px;
+    }
+    .post img{
+        width: 80px;
+        border-radius: 50%;
+    }
+    .post_content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .post_content-userName{
+        font-weight: bold;
+    }
+    .post_content-timePost{
+        margin-left: 10px;
+        font-weight: lighter;
+    }
+    .post_content-rating{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .fa-star{
+        color: gold;
+    }
+    /* modal */
+    .modal-header{
+        display: flex;
+        justify-content: center !important; 
+    }
+    .modal-header .fa-circle-check{
+        font-size: 30px;
+        color: #42f599;
+    }
+    .modal-footer{
+        display: flex;
+        justify-content: center !important; 
+    }
+    .modal-footer button{   
+        font-size: 24px;
+        background-color: #42f599 !important;
+        width: 100px;
+    }
+    
