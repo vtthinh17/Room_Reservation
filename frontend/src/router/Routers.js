@@ -8,7 +8,6 @@ import About from '../pages/about/About';
 import Facilities from '../pages/facilities/Facilities';
 import Feedback from '../pages/feedback/Feedback';
 import Rooms from '../pages/rooms/Rooms';
-import Booking from '../pages/booking/Booking';
 import BookingHistory from '../pages/bookinghistory/BookingHistory';
 import UserProfile from '../pages/userprofile/UserProfile';
 const Routers = () => {
@@ -22,7 +21,6 @@ const Routers = () => {
             <Route path ='/Facilities' element={<Facilities/>} />
             <Route path ='/feedback' element={<Feedback/>} />
             <Route path ='/rooms' element={<Rooms/>} />
-            <Route path ='/booking/:id' element={<Booking/>} />
             <Route path ='/user/bookinghistory/' element={<BookingHistory/>} />
             <Route path ='/user/userprofile/' element={<UserProfile/>} />
         </Routes>

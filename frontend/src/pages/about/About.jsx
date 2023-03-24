@@ -1,21 +1,21 @@
 import React from "react";
 import "./about.css";
-import { Row,Container } from 'reactstrap';
+import { Row, Container } from 'reactstrap';
 import award1 from './../../assets/images/award1.jpg';
 import award2 from './../../assets/images/award2.jpg';
 import award3 from './../../assets/images/award3.jpg';
 import hotelview from '../../assets/images/intro1.jpg';
 const About = () => {
     return (
-            <>
-            
-            <div className="achivement">            
+        <>
+
+            <div className="achivement">
                 <h1 className="text-center">Our achievement</h1>
                 <Row className="row">
                     <div className="col-6 content">
                         <h2>2018 World Luxury Hotel Awards</h2>
                         <p>Established in 2006, World Luxury Hotel Awards is the pinnacle of achievement in the luxury hotel industry offering international recognition as voted by guests, travelers and industry players alike. Over 300 000 international travelers vote each year, during a four-week period to select the winners. Luxury hotels have the opportunity to participate in the World Luxury Hotel Awards by entering hotel categories that showcase their unique selling points and destinations.</p>
-                       
+
                     </div>
                     <div className="col-6">
                         <img src={award1} alt="" />
@@ -31,7 +31,7 @@ const About = () => {
                             Tourism Award for excellence 2015-2016
                         </h2>
                         <p>Honouring boutique hotels from Shoreditch to California, and shortlisted by a panel of trailblazing travel experts, the Awards reveal the very best places for discerning travellers to visit.
-                        The awards recognizes and rewards Hotels, Resorts, Boutique Hotels, Villas and Lodges, and spas that deliver exceptional levels of service and world-class facilities to its guests.
+                            The awards recognizes and rewards Hotels, Resorts, Boutique Hotels, Villas and Lodges, and spas that deliver exceptional levels of service and world-class facilities to its guests.
                         </p>
                     </div>
 
@@ -48,8 +48,8 @@ const About = () => {
                 </Row>
             </div>
 
-           <Container>
-           <h1 className='text-center'>A little about us</h1>
+            <Container className="About-views">
+                <h1 className='text-center'>A little about us</h1>
                 <Row>
                     <p>
                         The hotel is located opposite of Hon Chong  Beach, just a few steps from the coast and about 100m from famous Hon Chong, where the most beautiful sunrise in Nha Trang.
@@ -64,17 +64,17 @@ const About = () => {
                         <img src={hotelview} alt="" />
                     </div>
                     <div className="col-3">
-                        <img src={hotelview} alt="" />
+                        <img src="https://img.freepik.com/free-photo/swimming-pool_1203-2576.jpg?w=360&t=st=1679385178~exp=1679385778~hmac=e879d60df227dcf582a07efd4ca2d8ffadb6b50ecb3a982c523a49c72f35b514" alt="" />
                     </div>
                     <div className="col-3">
-                        <img src={hotelview} alt="" />
+                        <img src="https://img.freepik.com/free-photo/wooden-table-background-cityscape_1153-3807.jpg?w=360&t=st=1679385206~exp=1679385806~hmac=b7a6ccad633cc05ff754365bb8c87166a4096b9cef03e6bf51dc5e795987280c" alt="" />
                     </div>
                     <div className="col-3">
-                        <img src={hotelview} alt="" />
+                        <img src="https://img.freepik.com/free-photo/vacation-resort-mountain-with-beautiful-color-morning-san-juan-puerto-rico_649448-2730.jpg?w=360&t=st=1679385258~exp=1679385858~hmac=0029e8ac2c45ed8bed56fa6d206d6d485c1a4b08bdb1fdff45ca8714ffc3a5e4" alt="" />
                     </div>
                 </Row>
-           </Container>
-            </>
+            </Container>
+        </>
     )
 }
 export default About;

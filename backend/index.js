@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import roomsRoute from "./app/routes/rooms.js";
 import authRoute from "./app/routes/auth.js";
 import usersRoute from "./app/routes/users.js";
+import bookingRoute from "./app/routes/booking.js";
 import feedbacksRoute from "./app/routes/feedbacks.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -31,6 +32,7 @@ app.use("/api/rooms", roomsRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/feedbacks", feedbacksRoute);
+app.use("/api/booking", bookingRoute);
 app.listen(8000,()=>{
     connect()
     console.log("BackendServer is running at URL: http://localhost:8000/api")

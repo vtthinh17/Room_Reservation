@@ -130,3 +130,10 @@
     opacity: 0.7;    
     cursor: pointer;
 }
+/* modal */
+.room_ifo img{
+    width: 100%;
+}
+.modal-footer > .btn{
+    width: 10rem;
+}

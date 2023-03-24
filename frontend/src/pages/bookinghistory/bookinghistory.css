@@ -2,7 +2,7 @@ svg{
     font-size: 20px;
     margin-left: 9px;
 }
-img{
+.BookingHistory img{
     width: 10%;
     object-fit: contain;
 }
@@ -13,9 +13,10 @@ img{
     cursor: pointer;
     opacity: 0.7;
 }
-.fa-circle-xmark{
+.fa-xmark{
+    padding-left: 3px;
     color:red;
 }
 .fa-trash-can{
-    color: red;
+    color: black;
 }

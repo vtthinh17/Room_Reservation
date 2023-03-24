@@ -65,9 +65,10 @@ export const updateRoom = async (req, res) => {
     }
   };
   export const getRoomByQuery = async (req, res, next) => {
-    // const { min, max, ...others } = req.query;
+    const { max, ...others } = req.query;
     try {
-     const rooms = await Room.find(req.query)
+    //  const rooms = await Room.find(req.query)
+    const rooms = await Room.find({ ...others,price: { $lt: max || 999 },}).limit(req.query)
       res.status(200).json(rooms);
       console.log('>> Get by query success!')
     } catch (err) {

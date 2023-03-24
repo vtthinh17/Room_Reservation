@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import "./header.css";
 import { Container, Row } from 'reactstrap';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link ,useNavigate} from 'react-router-dom';
 import logo from './../../assets/images/logo.png';
 import anonymous from './../../assets/images/anonymous_avatar.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -32,10 +32,12 @@ const nav__links = [
     },
 ]
 const Header = () => {
+    const navigate = useNavigate()
     const { user, dispatch } = useContext(AuthContext);
     const [profileEdit, setProfileEdit] = useState(false)
     const handleSignOut = () => {
         dispatch(authAction.logout());
+        navigate("/login")
     }
     return (
         <header className="header">

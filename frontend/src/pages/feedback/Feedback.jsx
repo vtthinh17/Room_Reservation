@@ -11,6 +11,7 @@ import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
 import useFetch from "../../hooks/useFetch";
+import { format } from 'date-fns';
 function Feedback() {
     const labels = {
         0.5: 'Useless',
@@ -35,23 +36,26 @@ function Feedback() {
     const [feedback, setFeedback] = useState({
         userId: user._id,
         content: '',
-        rating: rating
+        rating: rating,
+        writingAt: format(new Date(), "hh:mm dd/MM/yyyy")
     });
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
+    const [msgError, setMsgError] = useState(false);
     const handleChange = (e) => {
         setFeedback((prev) => ({ ...prev, [e.target.id]: e.target.value }));
         console.log(feedback)
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        toggle()
-        console.log()
+        setMsgError(false)  
         try {
-            await instance.post("/feedbacks/", { ...feedback, rating: rating });
+            await instance.post("/feedbacks/", { ...feedback, rating: rating,writingAt: format(new Date(), "hh:mm dd/MM/yyyy") });
             console.log("Insert new feedback into database success!!! >>>", { ...feedback, rating: rating })
             // reset Input value => set value =""
+            toggle()
         } catch (err) {
+            setMsgError(true)
             console.log(err)
         }
     }
@@ -79,7 +83,7 @@ function Feedback() {
                                                 <div>
                                                     <span className="post_content-userName">{feedback.userId}</span>
                                                     <span className="post_content-timePost">
-                                                        at {feedback.createdAt.slice(0, 10)}
+                                                        at {feedback.writingAt}
                                                         {/* 6 hours ago */}
                                                     </span>
                                                 </div>
@@ -102,16 +106,13 @@ function Feedback() {
             <Row>
                 <p className='text-center'>Hi <b>{user.userName}</b>, it would be great if you can give us some word about your experience here, we are value all you feedback!</p>
             </Row>
-            {/* <hr /> */}
             <Row>
                 <div className="col-6">
-
-                    {/* <img src={logo} alt="" /> */}
                 </div>
                 <div className="col-6">
                     <h1>Writing here</h1>
                     <div>
-                        <textarea onChange={handleChange} id='content' cols="50" rows="5" placeholder='Type somthing...' spellcheck="false"></textarea>
+                        <textarea onChange={handleChange} id='content' cols="50" rows="5" placeholder='Type somthing...' spellCheck="false"></textarea>
                     </div>
                     <div className="rating_input">
                         How do you like our services?
@@ -140,9 +141,10 @@ function Feedback() {
                                 <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : rating]}</Box>
                             )}
                         </Box>
-
+                        {msgError && <Row className='text-center' style={{ color: "red" }}>Please write something before submit</Row>}
                     </div>
                     <Button onClick={handleSubmit}>Submit</Button>
+                  
                     <Modal isOpen={modal} toggle={toggle}>
                         <ModalHeader><FontAwesomeIcon icon={faCircleCheck} /></ModalHeader>
                         <ModalBody>

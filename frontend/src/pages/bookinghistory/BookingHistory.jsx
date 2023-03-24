@@ -1,82 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import './bookinghistory.css'
 import instance from "../../service";
 import { Container, Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck,faCircleXmark,faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faXmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { AuthContext } from "../../contexts/AuthContext";
+import useFetch from "../../hooks/useFetch";
+import { format } from 'date-fns';
 const BookingHistory = () => {
-    // const { data, loading, error,reFetch } = useFetch("/orders/getAll/");
-    const [order,setOrder]=useState([])
-    const handleCancleOrder = async ()=>{
+    // const t = new Date()
+    // console.log(">>>dasewqewqeqwew:",t.toString().slice(0,15))
+    const handleCancleOrder = async (bookingId) => {
         if (window.confirm("Do you sure to cancel this order?")) {
             try {
-                // await instance.post("/order/delete/:id");
+
+                await instance.put("/booking/update/"+bookingId);
                 // refect de lay lai danh sach Order List va render lai giao dien sau khi xoa
-                // reFetch();
-                // setOrder(order)
-                console.log("Delete order success")
+                reFetch();
+                console.log("refetch data............")
+                console.log("Update status order success")
             } catch (error) {
                 console.log(error);
             }
-        }else{
+        } else {
             console.log("Undo cancel order,nothing change ")
         }
     }
+    const { user } = useContext(AuthContext)
+    const { data, loading, error,reFetch } = useFetch("/booking/" + user._id)
     return (
-        <Container>
+        <Container className="BookingHistory">
             <h3 className="text-center mb-3 mt-3">Booking history</h3>
-            <Table striped>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>BookingID</th>
-                        {/* <th>Room Number</th> */}
-                        <th>Dates</th>
-                        <th>Price</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>6409966dd3fbeef293548bd0</td>
-                        {/* <td>101</td> */}
-                        {/* {date[0].start} - {date[0].end}*/}
-                        <td>23/07/2023 - 02/09/2023</td>
-                        {/* {bookingsList.map(item,index)=>{
-                            switch(item.status){
-                                case 0: return <td><FontAwesomeIcon icon={faCircleXmark}/>Cancel</td>;
-                                case 1: return <td>Pending confirm... you can cancel this order<FontAwesomeIcon onclick={()=>{}} icon={faTrashCan}/>   
-                                case 2: return <td><FontAwesomeIcon icon={faCircleXmark}/>Done</td>;
-                            }   
-                        }} */}
-                        <td>20 x 7 = 140$</td>
-                        <td>Done</td> 
-                        <td><FontAwesomeIcon icon={faCircleCheck}/></td>                      
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>6409966dd3fbeef293548bd0</td>
-                        {/* <td>105</td> */}
-                        <td>23/07/2023 - 02/09/2023</td>
-                        <td>20 x 7 = 140$</td>
-                        <td>Pending confirm ={'>'} you still able to cancel this order</td>
-                        <td><FontAwesomeIcon onClick={handleCancleOrder} icon={faTrashCan}/></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>6409966dd3fbeef293548bd0</td>
-                        {/* <td>103</td> */}
-                        <td>23/07/2023 - 02/09/2023</td>
-                        {/* {room.price} x (booking.date_end - booking.date_start) = {booking.total_price} */}
-                        <td>20 x 7 = 140$</td>
-                        <td>Cancel</td>
-                        <td><FontAwesomeIcon icon={faCircleXmark}/></td>
-                    </tr>
-                </tbody>
-            </Table>
-        </Container>
+            {
+                loading
+                    ? (<h3 className='text-center'>Loading data...</h3>)
+                    : (
+                        <Table striped>
+                            {console.log(">>>fetch History data:", data)}
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>BookingID</th>
+                                    <th>Dates</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr >
+                            </thead >
+                            <tbody>
+                                {data.map((booking, index) =>
+                                    <tr key={index}>
+                                        <th>{index + 1}</th>
+                                        <td>{booking._id}</td>
+                                        <td>from {booking.dateServe.startServe} to {booking.dateServe.endServe}</td>
+                                        <td>{booking.totalPrice}$</td>
+                                        {/* check status to show text */}
+                                        <>
+                                            {booking.bookingStatus === 0 ?
+                                                <td>Cancel</td> : null
+                                            }
+                                             {booking.bookingStatus === 1 ?
+                                                <td>Pending confirm</td> : null
+                                            }
+                                             {booking.bookingStatus === 2 ?
+                                                <td>Success</td> : null
+                                            }
+                                        </>        
+                                        {/* check status to show icon */}
+                                        <>
+                                            {booking.bookingStatus === 0 ?
+                                                <td><FontAwesomeIcon icon={faXmark} /></td> : null
+                                            }
+                                             {booking.bookingStatus === 1 ?
+                                                <td><FontAwesomeIcon onClick={()=>handleCancleOrder(booking._id)} icon={faTrashCan} /></td> : null
+                                            }
+                                             {booking.bookingStatus === 2 ?
+                                                <td><FontAwesomeIcon icon={faCircleCheck} /></td> : null
+                                            }
+                                        </>                                   
+                                    </tr>
+
+                                )}
+                            </tbody>
+                        </Table >
+                    )
+            }
+        </Container >
     )
 }
 export default BookingHistory;
