@@ -1,0 +1,16 @@
+.roomImage{
+    width: 100px;
+}
+.bookingStatus{
+    padding: 7px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+}
+.bookingStatus_success{
+   
+    color: green;
+}
+.bookingStatus_cancel{
+    color: red;
+}

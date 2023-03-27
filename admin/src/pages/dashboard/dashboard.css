@@ -1,0 +1,81 @@
+.Dashboard .svg-inline--fa{
+    height: 30px;
+}
+.widget_links{
+    text-decoration: none;
+    color: black;
+    padding: 0;
+}
+.news .row{
+    margin: 0;
+}
+.title{
+    font-size: 20px;
+    font-weight: bold;
+}
+.income .title{
+    color: green;
+}
+.confirmNotify{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid grey;
+    padding: 20px;
+    margin: 10px 4px;
+    border-radius: 10px;
+}
+.confirmNotify_number{
+    display: flex;
+    justify-content: center;
+    width: 80px;
+    border-radius: 50%;
+    font-size: 30px;
+    padding:  16px;
+    font-weight: 600;
+    border: 5px solid #ffff4d;
+    margin-right: 30px;
+}
+.income{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid grey;
+
+}
+.income img{
+    width: 50%;
+
+}
+.income .fa-dollar-sign{
+    font-size: 8px;
+}
+.totalIncome{
+    font-weight: 700;
+    font-size: 30px;
+}
+.confirmNotify_message{
+    width: 190px;
+}
+.confirmNotify_approve{
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #33ff33;
+    /* color: white; */
+    border-radius: 20px;
+}
+.approveIcon{
+    margin-left: 10px;
+}
+.confirmNotify_approve:hover{
+    cursor: pointer;
+    /* background-color: #b3d1ff; */
+    color: white;
+    font-weight: 700;
+
+}
