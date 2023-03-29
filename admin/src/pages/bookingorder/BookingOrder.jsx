@@ -1,75 +1,70 @@
-import React from "react";
-import { Container, Row, Table,Button } from 'reactstrap';
+import { React, useContext, useState, useEffect } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+import { Container, Row, Table, Button } from 'reactstrap';
+import useFetch from "../../hooks/useFetch";
 const BookingOrder = () => {
+    const { user, dispatch } = useContext(AuthContext);
+    const dataBookingOrder = useFetch("/booking/")
+    const [data, setData] = useState([])
+    useEffect(() => {
+        setData(dataBookingOrder.data);
+    },
+        [dataBookingOrder.data]);
+    const handleConfirm = async () => {
+        console.log("change booking status")
+        // refetch()
+    }
     return (
-        <>
-            <div className="BookingOrder">
-                <Container>
-                    <h2 className="text-center">Booking orders list</h2>
-                    <Row>
-                        <Table striped>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>UserID</th>
-                                    <th>Dates serve</th>
-                                    <th>TotalPrice</th>
-                                    <th>Booking time</th>
-                                    <th>Booking Status</th>                                  
-                                </tr >
-                            </thead >
-                            <tbody>
-                                <tr>
-                                    <th>1</th>
-                                    <td>
-                                        63jdysd2#dsdgtyes
-                                    </td>
-                                    <td>from 23/07/2023 to 26/07/2023</td>
-                                    <td>100$</td>
-                                    <td> 15:23:03 23/07/2023</td>
-                                    <td>
-                                        {/* if status == 0 */}
-                                        <Button color="success" disabled>Success</Button>
-                                    </td>
-                                </tr>
+        <div className="BookingOrder">
+            {user ?
+                (<Container>
+                    {data.length > 0 ?
+                        <Row>
+                            <h2 className="text-center">Booking orders list</h2>
+                            <Table striped>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>UserID</th>
+                                        <th>Dates serve</th>
+                                        <th>TotalPrice</th>
+                                        <th>Booking time</th>
+                                        <th>Booking Status</th>
+                                    </tr >
+                                </thead >
+                                <tbody>
+                                    {data.map((booking, index) =>
+                                        <tr key={index}>
+                                            <th>{index + 1}</th>
+                                            <td>{booking.userID}</td>
+                                            <td>from {booking.dateServe.startServe} to {booking.dateServe.endServe}</td>
+                                            <td>{booking.totalPrice}$</td>
+                                            <td>{booking.bookingAt}</td>
 
-                                <tr>
-                                    <th>3</th>
-                                    <td>
-                                        {/* user.FullName or user.userName */}
-                                        63jdysd2#dsdgtyes
-                                    </td>
-                                    <td>from 19/07/2023 to 21/07/2023</td>
-                                    <td>100$</td>
-                                    <td>07:21:05 05/10/2022</td>
-                                    <td>
-                                        {/* if status == 1 */}
-                                        <Button color="warning" outline>Confirm</Button>
-                                    </td>
-                                </tr>
+                                            <>
+                                                {booking.bookingStatus === 0 ?
+                                                    <td><span style={{ color: "green" }}>Success</span></td> : null
+                                                }
+                                                {booking.bookingStatus === 1 ?
+                                                    <td><Button outline color="warning" onClick={handleConfirm}>Confirm</Button></td> : null
+                                                }
+                                                {booking.bookingStatus === 2 ?
+                                                    <td><span style={{ color: "red" }}>Cancel</span></td> : null
+                                                }
+                                            </>
+                                        </tr>
 
-                                <tr>
-                                    <th>2</th>
-                                    <td>
-                                        {/* user.FullName or user.userName */}
-                                        63jdysd2#dsdgtyes
-                                    </td>
-                                    <td>from 23/07/2023 to 23/07/2023</td>
-                                    <td>3.100$</td>
-                                    <td>18:32:23 05/10/2022</td>
-                                    <td>
-                                        {/* if status == 0 */}
-                                        <Button color="danger" disabled>Cancel</Button>
-                                    </td>
-                                </tr>
-
-
-                            </tbody>
-                        </Table >
-                    </Row>
+                                    )}
+                                </tbody>
+                            </Table >
+                        </Row>
+                        : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Loading data...</div>
+                    }
                 </Container>
-            </div>
-        </>
+                )
+                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "red" }}>You need to login first!</div>
+            }
+        </div>
     )
 }
 export default BookingOrder;

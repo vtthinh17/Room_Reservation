@@ -1,4 +1,5 @@
-import React from "react";
+import { React, useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 import { Container, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Widget from "../../components/widget/Widget";
@@ -7,10 +8,16 @@ import income from '../../assets/images/money-bag.png'
 import { format } from 'date-fns';
 import { faUser, faCommentDots, faHouseUser, faFileInvoiceDollar, faCalendarCheck, faFileCircleCheck, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {CanvasJSChart}  from 'canvasjs-react-charts';
-// var CanvasJS = CanvasJSReact.CanvasJS;
-// var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+import { CanvasJSChart } from 'canvasjs-react-charts';
+import useFetch from "../../hooks/useFetch";
 const Dashboard = () => {
+    const { user, dispatch } = useContext(AuthContext);
+    const dataFeedback = useFetch("/feedbacks/getAll")
+    const dataUser = useFetch("/users/")
+    const dataRoom = useFetch("/rooms/")
+    const dataBookingOrder = useFetch("/booking/")
+    const countNotifyOrder = dataBookingOrder.data.filter(element => element.bookingStatus === 1)
+    const countNotifyFeedback = dataFeedback.data.filter(element => element.isDisplay === false)
     const options = {
         animationEnabled: true,
         title: {
@@ -24,7 +31,7 @@ const Dashboard = () => {
         },
         data: [{
             name: "2022",
-            type: "spline",          
+            type: "spline",
             showInLegend: true,
             dataPoints: [
                 { y: 140, label: "Jan" },
@@ -33,7 +40,7 @@ const Dashboard = () => {
                 { y: 156, label: "Apr" },
                 { y: 133, label: "May" },
                 { y: 109, label: "Jun" },
-                { y: 86, label: "Jul" },
+                { y: 97, label: "Jul" },
                 { y: 149, label: "Aug" },
                 { y: 153, label: "Sept" },
                 { y: 158, label: "Oct" },
@@ -63,73 +70,80 @@ const Dashboard = () => {
     }
     const checkIncomeTime = new Date()
     const handleConfirm = () => {
-
+        // navigate('/type')
     }
     return (
-        // check this condition first: {admin ? DashBoard : <div>You need to login first<div/>}
-        <Container className="Dashboard">
-            {/* widgets */}
-            <Row>
-                <Link to='/rooms' className="widget_links col-3"><Widget type="Room" backgroundColor="#b3c6ff" icon={faHouseUser} countItem="10" /></Link>
-                <Link to='/feedback' className="widget_links col-3"><Widget type="Feedback" backgroundColor="#99ffd6" icon={faCommentDots} countItem="10" /></Link>
-                <Link to='/user' className="widget_links col-3"><Widget type="User" backgroundColor="#ffe6b3" icon={faUser} countItem="10" /></Link>
-                <Link to='/bookingorder' className="widget_links col-3"><Widget type="Booking" backgroundColor="#ffb3b3" icon={faFileInvoiceDollar} countItem="10" /></Link>
-            </Row>
-            {/* other */}
-            <div>
-                <div className="title">Notify</div>
-                <div className="news">
-                    <Row>
-                        {/* go to confirm Order */}
-                        <div className="col-8">
-                            <div className="confirmNotify">
-                                <div className="confirmNotify_number">10</div>
-                                <div className="confirmNotify_message">Order waiting confirm</div>
-                                <div onClick={handleConfirm} className="confirmNotify_approve">
-                                    Approve now
-                                    <span className="approveIcon">
-                                        <FontAwesomeIcon icon={faCalendarCheck} />
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="confirmNotify">
-                                <div className="confirmNotify_number">5</div>
-                                <div className="confirmNotify_message">Feedback waiting confirm</div>
-                                <div onClick={handleConfirm} className="confirmNotify_approve">
-                                    Approve now
-                                    <span className="approveIcon">
-                                        <FontAwesomeIcon icon={faFileCircleCheck} />
-                                    </span>
-                                </div>
+        <div>
+            {user ?
+                <Container className="Dashboard">
+                       {dataFeedback.data.length>0 && dataUser.data.length>0 && dataRoom.data.length>0? 
+                       <div>
+                        <Row>
+                            <Link to='/rooms' className="widget_links col-3"><Widget type="Room" backgroundColor="#b3c6ff" icon={faHouseUser} countItem={dataRoom.data.length} /></Link>
+                            <Link to='/feedback' className="widget_links col-3"><Widget type="Feedback" backgroundColor="#99ffd6" icon={faCommentDots} countItem={dataFeedback.data.length} /></Link>
+                            <Link to='/user' className="widget_links col-3"><Widget type="User" backgroundColor="#ffe6b3" icon={faUser} countItem={dataUser.data.length} /></Link>
+                            <Link to='/bookingorder' className="widget_links col-3"><Widget type="Booking" backgroundColor="#ffb3b3" icon={faFileInvoiceDollar} countItem={dataBookingOrder.data.length} /></Link>
+                        </Row>
+                        <div>
+                            <div className="title">Notify</div>
+                            <div className="news">
+                                <Row>
+                                    {/* go to confirm Order */}
+                                    <div className="col-8">
+                                        <div className="confirmNotify">
+                                            <div className="confirmNotify_number">{countNotifyOrder.length}</div>
+                                            <div className="confirmNotify_message">Order waiting confirm</div>
+                                            <div onClick={handleConfirm} className="confirmNotify_approve">
+                                                Approve now
+                                                <span className="approveIcon">
+                                                    <FontAwesomeIcon icon={faCalendarCheck} />
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="confirmNotify">
+                                            <div className="confirmNotify_number">{countNotifyFeedback.length}</div>
+                                            <div className="confirmNotify_message">Feedback waiting confirm</div>
+                                            <div onClick={handleConfirm} className="confirmNotify_approve">
+                                                Approve now
+                                                <span className="approveIcon">
+                                                    <FontAwesomeIcon icon={faFileCircleCheck} />
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* tim tat ca cac order co status==2(success) va tinh tong totalPrice ca order do */}
+                                    {/* const list = find(order.status==2)
+                               total =list.map(item,index)=>{
+                                   total+=item.totalPrice
+                               }
+                               return total;
+                           */}
+                                    <div className="col-4 income">
+                                        <div className="title">Total income</div>
+                                        <img src={income} alt="" />
+                                        <div>
+                                            <FontAwesomeIcon icon={faDollarSign} />
+                                            <span className="totalIncome">170 253.00</span>
+                                        </div>
+                                        <div style={{ fontWeight: "300", fontSize: "18px" }}>Latest check: {format(checkIncomeTime, "hh:mm dd/MM/yyyy")}</div>
+                                    </div>
+                                </Row>
                             </div>
                         </div>
-                        {/* tim tat ca cac order co status==2(success) va tinh tong totalPrice ca order do */}
-                        {/* const list = find(order.status==2)
-                                total =list.map(item,index)=>{
-                                    total+=item.totalPrice
-                                }
-                                return total;
-                            */}
-                        <div className="col-4 income">
-                            <div className="title">Total income</div>
-                            <img src={income} alt="" />
-                            <div>
-                                <FontAwesomeIcon icon={faDollarSign} />
-                                <span className="totalIncome">170 253.00</span>
-                            </div>
-                            <div style={{ fontWeight: "300", fontSize: "18px" }}>Latest check: {format(checkIncomeTime, "hh:mm dd/MM/yyyy")}</div>
+                        <div>
+                            <div className="title">Statistics Chart</div>
+                            <CanvasJSChart options={options}
+                            /* onRef={ref => this.chart = ref} */
+                            />
                         </div>
-                    </Row>
-                </div>
-            </div>
-            <div>
-            <div className="title">Statistics Chart</div>
-            <CanvasJSChart options = {options} 
-				/* onRef={ref => this.chart = ref} */
-			/>
-            </div>
-
-        </Container>
+                       </div>
+                       :<div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Loading data...</div>
+                       }
+                </Container>
+                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "red" }}>You need to login first!</div>
+            }
+        </div>
     )
 }
 export default Dashboard;
+// ----------------------------

@@ -1,0 +1,14 @@
+.fa-pen-to-square{
+    color:gold;
+}
+.fa-trash-can{
+    color:red;
+}
+.svg-inline--fa{
+    font-size: 20px;
+    margin-right: 10px;
+}
+.svg-inline--fa:hover{
+    opacity: 0.6;
+    cursor: pointer;
+}
