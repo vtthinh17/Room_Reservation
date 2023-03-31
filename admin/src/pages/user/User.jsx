@@ -1,12 +1,13 @@
 import { React, useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { Container, Row, Table, Button } from 'reactstrap';
+import { Container, Row, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import useFetch from "../../hooks/useFetch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import './user.css'
 import instance from "../../service";
 const User = () => {
+
     const { user, dispatch } = useContext(AuthContext);
     const { data, reFetch } = useFetch("/users/")
     const [dataUser, setDataUser] = useState([])
@@ -14,9 +15,22 @@ const User = () => {
         setDataUser(data);
     },
         [data]);
-    const handleDelete = async (selectedUser) => {
-        await instance.delete("/users/" + selectedUser._id);
+    const [modal, setModal] = useState(false);
+    const [choosenUser, setChoosenUser] = useState({});
+    const toggle = () => setModal(!modal);
+    const handleClick = (user) => {
+        toggle()
+        setChoosenUser(user)
+    }
+    const handleDelete = async () => {
+       try {
+        await instance.delete("/users/" + choosenUser._id);
+        toggle()
         reFetch();
+       } catch (error) {
+        
+       }
+        
     }
     return (
         <div className="User">
@@ -47,11 +61,25 @@ const User = () => {
                                         {user.address ? <td>{user.address}</td> : <td style={{ textAlign: "center" }}>...</td>}
                                         {user.phone ? <td>{user.phone}</td> : <td style={{ textAlign: "center" }}>...</td>}
                                         <td>
-                                            <FontAwesomeIcon onClick={()=>handleDelete(user)} icon={faTrashCan} />
+                                            <FontAwesomeIcon onClick={() => handleClick(user)} icon={faTrashCan} />
                                         </td>
                                     </tr>
                                 )}
                             </tbody>
+                            <Modal isOpen={modal} toggle={toggle}>
+                                <ModalHeader toggle={toggle}>Cofirm delete</ModalHeader>
+                                <ModalBody>
+                                Do you want to delete this user?
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="danger" onClick={handleDelete}>
+                                        Delete
+                                    </Button>{' '}
+                                    <Button color="secondary" onClick={toggle}>
+                                        Cancel
+                                    </Button>
+                                </ModalFooter>
+                            </Modal>
                         </Table >
                     </Row>
                         : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Loading data...</div>
