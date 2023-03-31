@@ -37,8 +37,13 @@ const BookingHistory = () => {
                 loading
                     ? (<h3 className='text-center'>Loading data...</h3>)
                     : (
+<<<<<<< Updated upstream
                        <div>
                         {data.length>0? <Table striped>
+=======
+                        <div>
+                            {data.length>0?<Table striped>
+>>>>>>> Stashed changes
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -77,9 +82,16 @@ const BookingHistory = () => {
                                 )}
                             </tbody>
                         </Table >
+<<<<<<< Updated upstream
                         :<div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "30px", height: "27vh", color: "grey" }}>You have not booked any room yet!</div>
                         }
                        </div>
+=======
+                                    : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "27vh", color: "grey" }}>Empy booking history!</div>
+  
+                    }
+                        </div>
+>>>>>>> Stashed changes
                     )
             }
         </Container >

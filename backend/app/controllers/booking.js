@@ -66,7 +66,7 @@ export const cancelBooking = async (req, res) => {
   };
   export const getBookingByUserID = async (req, res, next) => {
     try {
-     const bookings = await Booking.find(req.query,userID)
+     const bookings = await Booking.find({userID:req.params.id})
       res.status(200).json(bookings);
       console.log('>> Get by query success!')
     } catch (err) {
