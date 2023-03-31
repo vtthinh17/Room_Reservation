@@ -17,20 +17,22 @@ export default function PersonalProfile() {
     const [dataShow,setDataShow] = useState(user)
     const handleUpdate = async (e) => {
         e.preventDefault();
-        console.log("sent this data to server for update>>>", data)
-        try {
-            await instance.put("/users/update/" + user._id, data);
-            const abc = {...JSON.parse(localStorage.getItem("user")),...data}
-            console.log(abc)
-            localStorage.setItem("user", JSON.stringify(abc));
-            setDataShow(abc);
-            setMessage('Update profile success')
-            
-            // setData(initialFormState)
-        } catch (err) {
-            setMessage('Something wrong, cannot update now, please try later!')
-            console.log(err)
+        // console.log("sent this data to server for update>>>", data)
+        if(Object.keys(data).length !== 0){
+            try {
+                await instance.put("/users/update/" + user._id, data);
+                const abc = {...JSON.parse(localStorage.getItem("user")),...data}
+                localStorage.setItem("user", JSON.stringify(abc));
+                setDataShow(abc);
+                setMessage('Update profile success')
+            } catch (err) {
+                setMessage('Something wrong, cannot update now, please try later!')
+                console.log(err)
+            }
+        }else{
+            setMessage('Empty data, please fill in at least 1 field before submit!!!')
         }
+        
 
 
     }

@@ -44,7 +44,10 @@ li> a{
     text-decoration: none;
 }
 
-/* toggle login/lougout */
+.user_name:hover{
+    cursor: pointer;
+    opacity: 0.8;
+}
 .login_register{ 
     display: block;
 

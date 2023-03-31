@@ -6,17 +6,10 @@ svg{
     width: 10%;
     object-fit: contain;
 }
-.fa-circle-check{
-    color:green;
-}
 .fa-trash-can:hover{
     cursor: pointer;
     opacity: 0.7;
 }
-.fa-xmark{
-    padding-left: 3px;
-    color:red;
-}
 .fa-trash-can{
-    color: black;
+    color:#ff1a1a;
 }

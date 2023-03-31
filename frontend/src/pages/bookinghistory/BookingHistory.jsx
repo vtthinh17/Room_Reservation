@@ -14,7 +14,7 @@ const BookingHistory = () => {
         if (window.confirm("Do you sure to cancel this order?")) {
             try {
 
-                await instance.put("/booking/update/"+bookingId);
+                await instance.put("/booking/update/" + bookingId);
                 // refect de lay lai danh sach Order List va render lai giao dien sau khi xoa
                 reFetch();
                 console.log("refetch data............")
@@ -27,16 +27,18 @@ const BookingHistory = () => {
         }
     }
     const { user } = useContext(AuthContext)
-    const { data, loading, error,reFetch } = useFetch("/booking/" + user._id)
+    console.log("current user:", user)
+    const { data, loading, error, reFetch } = useFetch("/booking/" + user._id)
+    console.log("current data booking history:", data)
     return (
         <Container className="BookingHistory">
             <h3 className="text-center mb-3 mt-3">Booking history</h3>
-            {
+            {   
                 loading
                     ? (<h3 className='text-center'>Loading data...</h3>)
                     : (
-                        <Table striped>
-                            {console.log(">>>fetch History data:", data)}
+                       <div>
+                        {data.length>0? <Table striped>
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -55,34 +57,29 @@ const BookingHistory = () => {
                                         <td>from {booking.dateServe.startServe} to {booking.dateServe.endServe}</td>
                                         <td>{booking.totalPrice}$</td>
                                         {/* check status to show text */}
-                                        <>
-                                            {booking.bookingStatus === 0 ?
-                                                <td>Cancel</td> : null
-                                            }
-                                             {booking.bookingStatus === 1 ?
-                                                <td>Pending confirm</td> : null
-                                            }
-                                             {booking.bookingStatus === 2 ?
-                                                <td>Success</td> : null
-                                            }
-                                        </>        
-                                        {/* check status to show icon */}
-                                        <>
-                                            {booking.bookingStatus === 0 ?
-                                                <td><FontAwesomeIcon icon={faXmark} /></td> : null
-                                            }
-                                             {booking.bookingStatus === 1 ?
-                                                <td><FontAwesomeIcon onClick={()=>handleCancleOrder(booking._id)} icon={faTrashCan} /></td> : null
-                                            }
-                                             {booking.bookingStatus === 2 ?
-                                                <td><FontAwesomeIcon icon={faCircleCheck} /></td> : null
-                                            }
-                                        </>                                   
+
+                                        {booking.bookingStatus === 0 ?
+                                            <td style={{ color: "red" }}>Cancel</td> : null
+                                        }
+                                        {booking.bookingStatus === 1 ?
+                                            <td>Pending confirm...</td> : null
+                                        }
+                                        {booking.bookingStatus === 2 ?
+                                            <td style={{ color: "green" }}>Success</td> : null
+                                        }
+
+
+                                        {booking.bookingStatus === 1 ?
+                                            <td><FontAwesomeIcon onClick={() => handleCancleOrder(booking._id)} icon={faTrashCan} /></td> : null
+                                        }
                                     </tr>
 
                                 )}
                             </tbody>
                         </Table >
+                        :<div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "30px", height: "27vh", color: "grey" }}>You have not booked any room yet!</div>
+                        }
+                       </div>
                     )
             }
         </Container >

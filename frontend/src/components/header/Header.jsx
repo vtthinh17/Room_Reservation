@@ -5,7 +5,7 @@ import { NavLink, Link ,useNavigate} from 'react-router-dom';
 import logo from './../../assets/images/logo.png';
 import anonymous from './../../assets/images/anonymous_avatar.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOut } from '@fortawesome/free-solid-svg-icons';
+import { faSignOut,faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import authAction from "../../action/AuthAction";
@@ -69,7 +69,7 @@ const Header = () => {
                                 user
                                     ? (<div className="user_profile" onClick={() => setProfileEdit(!profileEdit)}>
                                         <img src={anonymous} alt="Avatar" />
-                                        <p className="user_name">Hi, <b>{user.userName}</b></p>
+                                        <p className="user_name">Hi, <b>{user.userName}</b> <FontAwesomeIcon icon={faCaretDown} /></p>
                                         {profileEdit && <div className="user_menu">
                                             <ul>
                                                 <li><Link to='/user/userprofile/'>Edit profile</Link></li>
