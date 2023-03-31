@@ -4,8 +4,8 @@ const FeedbackSchema = new mongoose.Schema(
         userId: {type: String, required: true},
         content: {type: String, required: true},        
         isDisplay: {type: Boolean, default: false},
-        rating:{type: Number},
-        writingAt: {type: String}
+        rating:{type: Number,required: true},
+        writingAt: {type: String, required: true}
     }
 );
 

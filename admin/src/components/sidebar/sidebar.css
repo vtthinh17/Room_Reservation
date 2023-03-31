@@ -1,0 +1,27 @@
+#sidebarImg{
+    width: 50%;
+    margin: 10px 44px;
+}
+
+.sidebarItem{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    text-decoration: none;
+    list-style: none;
+    font-weight: 500;
+}
+.sidebarItem > a{
+    text-decoration: none;
+   
+}
+.sidebarItem:hover{
+    background: rgb(238, 232, 232);
+    opacity: 0.7;
+    cursor: pointer;
+}
+.sidebarItem_icon{
+    color: rgb(72, 69, 69);
+    width: 40px;
+    margin-right: 14px;
+}

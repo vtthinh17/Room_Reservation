@@ -31,6 +31,7 @@ export const updateFeedback = async (req, res) => {
       }
 
   };
+  
   export const getFeedback = async (req, res, next) => {
     try {
       const feedback = await Feedback.findById(req.params.id);
@@ -40,6 +41,7 @@ export const updateFeedback = async (req, res) => {
       next(err);
     }
   };
+
   export const getFeedbacks = async (req, res, next) => {
     try {
       const feedbacks = await Feedback.find({isDisplay:true});
@@ -50,7 +52,23 @@ export const updateFeedback = async (req, res) => {
         })
       );
       res.status(200).json(list)
-      console.log('>> Get all feedbacks have isDisplay==TRUE success>>>',list)
+      console.log('>> Get display feedbacks success')
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  export const getAllFeedbacks = async (req, res, next) => {
+    try {
+      const feedbacks = await Feedback.find();
+      // const feedbacks = await Feedback.find();
+      const list = await Promise.all(
+        feedbacks.map((feedback) => {
+          return Feedback.findById(feedback._id);
+        })
+      );
+      res.status(200).json(list)
+      console.log('>> Get all feedbacks success')
     } catch (err) {
       next(err);
     }

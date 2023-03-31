@@ -1,0 +1,27 @@
+.Rooms ul li {
+    list-style: none;
+}
+.roomImage{
+    width: 140px;
+}
+.bookingStatus{
+    padding: 7px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+}
+.bookingStatus_success{
+   
+    color: green;
+}
+.bookingStatus_cancel{
+    color: red;
+}
+.svg-inline--fa{
+    font-size: 14px;
+    margin-right: 10px;
+}
+.svg-inline--fa:hover{
+    opacity: 0.7;
+    cursor: pointer;
+}

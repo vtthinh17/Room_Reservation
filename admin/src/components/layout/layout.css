@@ -1,0 +1,13 @@
+.layout{
+    display: flex;
+}
+.sidebar{
+    flex: 1;
+}
+
+.mainLayout{
+    /* flex-direction: column; */
+    flex: 4;
+    margin-right: 6px;
+
+}
