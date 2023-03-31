@@ -71,8 +71,7 @@ const BookingOrder = () => {
                     }
                 </Container>
                 )
-                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "grey" }}>You need to login first!</div>
-            }
+                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "27vh", color: "grey" }}>Empy booking history!</div>            }
         </div>
     )
 }
