@@ -18,10 +18,12 @@ const Dashboard = () => {
     const dataBookingOrder = useFetch("/booking/")
     const countNotifyOrder = dataBookingOrder.data.filter(element => element.bookingStatus === 1)
     const countNotifyFeedback = dataFeedback.data.filter(element => element.isDisplay === false)
+    var revenue=0;
+    dataBookingOrder.data.filter(element => element.bookingStatus === 2?revenue+=element.totalPrice : 0)
     const options = {
         animationEnabled: true,
         title: {
-            text: "Number of New Customers"
+            text: "Number of customers visit in 2022-2023"
         },
         axisY: {
             title: "Number of Customers"
@@ -111,19 +113,12 @@ const Dashboard = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* tim tat ca cac order co status==2(success) va tinh tong totalPrice ca order do */}
-                                    {/* const list = find(order.status==2)
-                               total =list.map(item,index)=>{
-                                   total+=item.totalPrice
-                               }
-                               return total;
-                           */}
                                     <div className="col-4 income">
-                                        <div className="title">Total income</div>
+                                        <div className="title">Revenue</div>
                                         <img src={income} alt="" />
                                         <div>
                                             <FontAwesomeIcon icon={faDollarSign} />
-                                            <span className="totalIncome">170 253.00</span>
+                                            <span className="totalIncome">{revenue}</span>
                                         </div>
                                         <div style={{ fontWeight: "300", fontSize: "18px" }}>Latest check: {format(checkIncomeTime, "hh:mm dd/MM/yyyy")}</div>
                                     </div>
@@ -137,10 +132,10 @@ const Dashboard = () => {
                             />
                         </div>
                        </div>
-                       :<div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Loading data...</div>
+                       :<div className="spinner" style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Loading data...</div>
                        }
                 </Container>
-                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "red" }}>You need to login first!</div>
+                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "grey" }}>You need to login first!</div>
             }
         </div>
     )

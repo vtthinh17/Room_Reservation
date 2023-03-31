@@ -44,11 +44,9 @@ const Login = () => {
         </div>
         {msgError && <span className='text-center' style={{ color: "red" }}>{error.slice((error.indexOf('Error:')+6),error.indexOf('!<br>'))}</span>}
         <Button className="mb-4 btn" onClick={handleSignIn} color='primary'>Sign in</Button>
-        <p className="text-center">Not a member? <Link to='/register'>Register</Link></p>
         
       </MDBContainer>
     </div>
-
   );
 }
 

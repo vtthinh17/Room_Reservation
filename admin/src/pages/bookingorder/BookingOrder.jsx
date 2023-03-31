@@ -2,18 +2,27 @@ import { React, useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { Container, Row, Table, Button } from 'reactstrap';
 import useFetch from "../../hooks/useFetch";
+import instance from "../../service";
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const BookingOrder = () => {
     const { user, dispatch } = useContext(AuthContext);
-    const dataBookingOrder = useFetch("/booking/")
-    const [data, setData] = useState([])
+    const  {data,reFetch}= useFetch("/booking/")
+    const [dataBookingOrder, setDataBookingOrder] = useState([])
     useEffect(() => {
-        setData(dataBookingOrder.data);
+        setDataBookingOrder(data);
     },
-        [dataBookingOrder.data]);
-    const handleConfirm = async () => {
-        console.log("change booking status")
-        // refetch()
+        [data]);
+    const handleConfirm = async (selectedBookingOrder) => {
+        // console.log("selected booking:",selectedBookingOrder)
+        await instance.put("/booking/update/"+selectedBookingOrder._id,{bookingStatus:2});
+        reFetch();
     }
+    const handleDelete = async (selectedBookingOrder) => {
+        // console.log("selected booking:",selectedBookingOrder)
+        await instance.delete("/booking/delete/"+selectedBookingOrder._id);
+        reFetch();
+    } 
     return (
         <div className="BookingOrder">
             {user ?
@@ -33,7 +42,7 @@ const BookingOrder = () => {
                                     </tr >
                                 </thead >
                                 <tbody>
-                                    {data.map((booking, index) =>
+                                    {dataBookingOrder.map((booking, index) =>
                                         <tr key={index}>
                                             <th>{index + 1}</th>
                                             <td>{booking.userID}</td>
@@ -46,10 +55,10 @@ const BookingOrder = () => {
                                                     <td><span style={{ color: "green" }}>Success</span></td> : null
                                                 }
                                                 {booking.bookingStatus === 1 ?
-                                                    <td><Button outline color="warning" onClick={handleConfirm}>Confirm</Button></td> : null
+                                                    <td><Button color="warning" onClick={()=>handleConfirm(booking)}>Confirm</Button></td> : null
                                                 }
                                                 {booking.bookingStatus === 2 ?
-                                                    <td><span style={{ color: "red" }}>Cancel</span></td> : null
+                                                    <td><span style={{ color: "red" }}>Cancel --{'>'}<FontAwesomeIcon onClick={()=>handleDelete(booking)} icon={faTrashCan}/></span></td> : null
                                                 }
                                             </>
                                         </tr>
@@ -62,7 +71,7 @@ const BookingOrder = () => {
                     }
                 </Container>
                 )
-                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "red" }}>You need to login first!</div>
+                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "grey" }}>You need to login first!</div>
             }
         </div>
     )

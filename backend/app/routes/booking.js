@@ -1,5 +1,5 @@
 import express from "express";
-import {createBooking,updateBooking,deleteBooking,getBooking,getBookings,getBookingByUserID} from '../controllers/booking.js';
+import {createBooking,cancelBooking,deleteBooking,getBooking,getBookings,getBookingByUserID,updateBooking} from '../controllers/booking.js';
 import { verifyUser,verifyAdmin } from "../utils/verifyToken.js";
 const router = express.Router();
 // GET
@@ -13,7 +13,9 @@ router.get("/:id", getBookingByUserID);
 //CREATE
 router.post("/create",verifyUser, createBooking);
 // Update
-router.put("/update/:id",verifyUser, updateBooking)
+router.put("/update/:id",verifyAdmin, updateBooking)
+updateBooking
+router.put("/update/:id",verifyUser, cancelBooking)
 // Delete
 router.delete("/delete/:id",verifyAdmin, deleteBooking)
 

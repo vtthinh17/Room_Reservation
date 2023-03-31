@@ -3,23 +3,20 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { Container, Row, Table, Button } from 'reactstrap';
 import useFetch from "../../hooks/useFetch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import './user.css'
+import instance from "../../service";
 const User = () => {
     const { user, dispatch } = useContext(AuthContext);
-    const dataUser = useFetch("/users/")
-    const [data, setData] = useState([])
+    const { data, reFetch } = useFetch("/users/")
+    const [dataUser, setDataUser] = useState([])
     useEffect(() => {
-        setData(dataUser.data);
+        setDataUser(data);
     },
-        [dataUser.data]);
-    const handleUpdate = async () => {
-        // instance.update('/user/update'+user.Id)
-        // refetch()
-    }
-    const handleDelete = async () => {
-        // instance.delete('/user/delete'+user.Id)
-        // refetch()
+        [data]);
+    const handleDelete = async (selectedUser) => {
+        await instance.delete("/users/" + selectedUser._id);
+        reFetch();
     }
     return (
         <div className="User">
@@ -40,7 +37,7 @@ const User = () => {
                                 </tr >
                             </thead >
                             <tbody>
-                                {data.map((user, index) =>
+                                {dataUser.map((user, index) =>
                                     <tr key={index}>
                                         <th>{index + 1}</th>
                                         <td>{user._id}</td>
@@ -50,8 +47,7 @@ const User = () => {
                                         {user.address ? <td>{user.address}</td> : <td style={{ textAlign: "center" }}>...</td>}
                                         {user.phone ? <td>{user.phone}</td> : <td style={{ textAlign: "center" }}>...</td>}
                                         <td>
-                                            <FontAwesomeIcon onClick={handleUpdate} icon={faEdit} />
-                                            <FontAwesomeIcon onClick={handleDelete} icon={faTrashCan} />
+                                            <FontAwesomeIcon onClick={()=>handleDelete(user)} icon={faTrashCan} />
                                         </td>
                                     </tr>
                                 )}

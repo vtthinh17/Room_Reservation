@@ -11,6 +11,16 @@ export const createBooking = async (req, res) => {
 }
 
 export const updateBooking = async (req, res) => {
+  try {
+    const updatedBooking = await Booking.findByIdAndUpdate(req.params.id,{ $set: req.body }  );
+    res.status(200).json(updatedBooking);
+    console.log('>>Update booking success')
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const cancelBooking = async (req, res) => {
     try {
       const updatedBooking = await Booking.findByIdAndUpdate(req.params.id,{bookingStatus: 0},  );
       res.status(200).json(updatedBooking);
@@ -56,7 +66,7 @@ export const updateBooking = async (req, res) => {
   };
   export const getBookingByUserID = async (req, res, next) => {
     try {
-     const bookings = await Booking.find(req.query)
+     const bookings = await Booking.find(req.query,userID)
       res.status(200).json(bookings);
       console.log('>> Get by query success!')
     } catch (err) {
