@@ -8,19 +8,19 @@ import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import { format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import useFetch from "../../hooks/useFetch";
 import instance from "../../service";
 const Reservations = () => {
     // const navigate = useNavigate()
-    
-    const { data, loading, error } = useFetch("/rooms/");
+
+    const { data, loading, error, reFetch } = useFetch("/rooms/");
     const [roomList, setRoomList] = useState([]);
     useEffect(() => {
         setRoomList(data);
-      },
-    [data]);
+    },
+        [data]);
     // ----------Filter------------------
     const roomOptions = [
         { value: 1, label: 'Single' },
@@ -32,7 +32,6 @@ const Reservations = () => {
     const handleSelectRoomType = (type) => {
         console.log('Loai phong', type)
         setRoomType(type)
-        // console.log('state Romm Type', roomType)
     }
 
     // ------------select date-------------------
@@ -53,18 +52,11 @@ const Reservations = () => {
         setPriceFilter(e.target.value)
     }
     // search
-    const getFilter = async() => {
+    const getFilter = async () => {
         // const {query} = useFetch(`/rooms`);
         const query = await instance.get(`/rooms/getRoomByQuery?roomType=${roomType}&max=${priceFilter}`)
-        console.log("list query:",query.data);
+        console.log("list query:", query.data);
         setRoomList(query.data);
-        // console.log({
-        //     loaiPhong: roomType,
-        //     giaTien: priceFilter,
-        //     ngaybatdau: date[0].startDate.getDate(),
-        //     ngayketthuc: date[0].endDate.getDate(),
-        //     thang: date[0].startDate.getMonth() + 1
-        // })
     }
     const [modal, setModal] = useState(false);
     const [nestedModal, setNestedModal] = useState(false);
@@ -75,44 +67,78 @@ const Reservations = () => {
         setNestedModal(!nestedModal);
         setCloseAll(true);
     };
+    const [disableList, setDisableList] = useState([]);
 
     const handleConfirmBooking = async () => {
         // check room date is available
 
         setNestedModal(!nestedModal);
         setCloseAll(false);
-        // Tạo order mới => inser ngày đặt(date[0]) vào danh sách dateServe của phòng được chọn
         try {
             instance.post('/booking/create/', {
                 roomID: choosenRoom._id,
                 userID: JSON.parse(localStorage.getItem("user"))._id,
-                dateServe: {startServe:format(date[0].startDate, "dd/MM/yyyy"),endServe:format(date[0].endDate, "dd/MM/yyyy")},
+                dateServe: { startServe: date[0].startDate, endServe: date[0].endDate },
                 totalPrice: choosenRoom.price * (date[0].endDate.getDate() - date[0].startDate.getDate() + 1),
                 bookingAt: new Date(),
             })
-
+            instance.put('/rooms/addDateServe/' + choosenRoom._id, { startServe: date[0].startDate, endServe: date[0].endDate })
+            reFetch()
             console.log("Insert new booking success!!!")
         } catch (error) {
             console.log("Insert new booking error:", error)
         }
     }
-   
+
+    function getDates(startDate, stopDate) {
+        let dateArray = [];
+        let currentDate = new Date(startDate);
+        while (currentDate <= new Date(stopDate)) {
+            dateArray.push(currentDate);
+            currentDate = addDays(currentDate, 1);
+        }
+        return dateArray;
+    }
+
     const handleClick = (room) => {
         // toggle()
         setModal(!modal)
         setChoosenRoom(room)
-   
-        console.log("ngay dat: " + format(date[0].startDate, "dd/MM/yyyy") + format(date[0].endDate, " - dd/MM/yyyy"))
-        console.log("cac ngay da duoc dat truoc cua phong duoc chon: ", room.dateServe)
-        const pickDate = {start:Date.parse(date[0].startDate),end: Date.parse(date[0].endDate)}
-        console.log(pickDate)
+        // var daterange = room.dateServe.map((e,index)=>{
+        //     range(e.startDate.slice(''))
+        // })
+        let disableDateList = [];
+        room.dateServe.forEach(element => {
+
+            disableDateList = disableDateList.concat(getDates(element.startServe, element.endServe));
+        });
+        setDisableList(disableDateList)
+        console.log("cac ngay da duoc dat truoc cua phong duoc chon: ", disableDateList)
     }
+    console.log("schedule: ", date)
     return (
         <div className="reservation">
             <div>
                 {/* fetch data every render(model onclick => render => fetch data => many render(violation rule react limited render)) */}
                 <Modal isOpen={modal} >
                     <ModalHeader>Room {choosenRoom.roomNumber}</ModalHeader>
+                    {/* {console.log(choosenRoom.dateServe)} */}
+                    <div className="searchBar_date">
+                        <FontAwesomeIcon icon={faCalendarDays} />
+                        <span onClick={() => setOpenDate(!openDate)}>Set your schedule: {`${format(date[0].startDate, "dd/MM/yyyy")} to ${format(date[0].endDate, "dd/MM/yyyy")}`} </span>
+                        {openDate && <DateRange
+                            minDate={new Date()}
+                            // [get dateServe list from Room => date start form 0 => date.getDay()+1]
+                            disabledDates={disableList}
+                            editableDateInputs={true}
+                            onChange={item => setDate([item.selection])}
+                            moveRangeOnFirstSelection={false}
+                            ranges={date}
+                            className='searchBar_calendar'
+                            preventSnapRefocus={true}
+
+                        />}
+                    </div>
                     <ModalBody>
                         <div className="room_ifo row">
                             <div className="col-6">
@@ -197,20 +223,7 @@ const Reservations = () => {
                                     </input>
                                 </div>
 
-                                <div className="searchBar_date">
-                                    <FontAwesomeIcon icon={faCalendarDays} />
-                                    <span onClick={() => setOpenDate(!openDate)}>Pick your days: {`${format(date[0].startDate, "dd/MM/yyyy")} to ${format(date[0].endDate, "dd/MM/yyyy")}`} </span>
-                                    {openDate && <DateRange
-                                        minDate={new Date()}
-                                        editableDateInputs={true}
-                                        onChange={item => setDate([item.selection])}
-                                        moveRangeOnFirstSelection={false}
-                                        ranges={date}
-                                        className='searchBar_calendar'
-                                        preventSnapRefocus={true}
 
-                                    />}
-                                </div>
 
                                 <div>
                                     <button className="searchBar_button" onClick={getFilter}>Search</button>

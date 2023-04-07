@@ -56,7 +56,7 @@
 }
 /* date */
 .searchBar_date{
-    width: 330px;
+    width: 100%;
     font-weight: 500;
     cursor: pointer;
 }
@@ -68,6 +68,7 @@
 }
 .searchBar_calendar{
     position: absolute;
+    z-index: 4;
     top: 0 ;
     right: 0;
     cursor:pointer
@@ -105,6 +106,7 @@
 
 .list_room-items >img{
     width: 100%;
+    height: 248px;
 }
 
 .list_room-items--description{
