@@ -14,8 +14,7 @@ router.get("/:id", getBookingByUserID);
 router.post("/create",verifyUser, createBooking);
 // Update
 router.put("/update/:id",verifyAdmin, updateBooking)
-updateBooking
-router.put("/update/:id",verifyUser, cancelBooking)
+router.put("/cancel/:id",verifyUser, cancelBooking)
 // Delete
 router.delete("/delete/:id",verifyAdmin, deleteBooking)
 

@@ -22,6 +22,18 @@ export const updateRoom = async (req, res) => {
   }
 };
 
+export const removeDateServe = async (req, res) => {
+  try {
+    console.log(req.body);
+    const updatedRoom = await Room.findByIdAndUpdate(req.params.id,  { $pull: { dateServe: {startServe:req.body.startServe,endServe:req.body.endServe} } },
+    );
+    res.status(200).json(updatedRoom);
+    console.log('>>Remove date serve of booking room success')
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const addDateServe = async (req, res) => {
   try {
     const updatedRoom = await Room.findByIdAndUpdate(req.params.id, { $push: { dateServe: req.body  } },
@@ -52,15 +64,6 @@ export const getRoom = async (req, res, next) => {
     next(err);
   }
 };
-// export const getRooms = async (req, res, next) => {
-//   try {
-//     const rooms = await Room.find();
-//     res.status(200).json(rooms);
-//     console.log('>> Get all rooms success!')
-//   } catch (err) {
-//     next(err);
-//   }
-// };
 
 export const getRooms = async (req, res, next) => {
   try {
@@ -79,7 +82,6 @@ export const getRooms = async (req, res, next) => {
 export const getRoomByQuery = async (req, res, next) => {
   const { max, ...others } = req.query;
   try {
-    //  const rooms = await Room.find(req.query)
     const rooms = await Room.find({ ...others, price: { $lt: max || 999 }, }).limit(req.query)
     res.status(200).json(rooms);
     console.log('>> Get by query success!')

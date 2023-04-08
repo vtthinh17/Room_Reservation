@@ -8,17 +8,12 @@ import { AuthContext } from "../../contexts/AuthContext";
 import useFetch from "../../hooks/useFetch";
 import { format } from 'date-fns';
 const BookingHistory = () => {
-    // const t = new Date()
-    // console.log(">>>dasewqewqeqwew:",t.toString().slice(0,15))
-    const handleCancleOrder = async (bookingId) => {
+    const handleCancleOrder = async (booking) => {
         if (window.confirm("Do you sure to cancel this order?")) {
-            try {
-
-                await instance.put("/booking/update/" + bookingId);
-                // refect de lay lai danh sach Order List va render lai giao dien sau khi xoa
+            try {           
+                await instance.put("/booking/cancel/" + booking._id);
+                await instance.put("/rooms/removeDateServe/" +booking.roomID,booking.dateServe);
                 reFetch();
-                console.log("refetch data............")
-                console.log("Update status order success")
             } catch (error) {
                 console.log(error);
             }
@@ -27,9 +22,7 @@ const BookingHistory = () => {
         }
     }
     const { user } = useContext(AuthContext)
-    console.log("current user:", user)
     const { data, loading, error, reFetch } = useFetch("/booking/" + user._id)
-    console.log("current data booking history:", data)
     return (
         <Container className="BookingHistory">
             <h3 className="text-center mb-3 mt-3">Booking history</h3>
@@ -70,7 +63,7 @@ const BookingHistory = () => {
 
 
                                         {booking.bookingStatus === 1 ?
-                                            <td><FontAwesomeIcon onClick={() => handleCancleOrder(booking._id)} icon={faTrashCan} /></td> : null
+                                            <td><FontAwesomeIcon onClick={() => handleCancleOrder(booking)} icon={faTrashCan} /></td> : null
                                         }
                                     </tr>
 
