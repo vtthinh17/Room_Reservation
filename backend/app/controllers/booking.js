@@ -22,7 +22,7 @@ export const updateBooking = async (req, res) => {
 
 export const cancelBooking = async (req, res) => {
     try {
-      const updatedBooking = await Booking.findByIdAndUpdate(req.params.id,{bookingStatus: 0},  );
+      const updatedBooking = await Booking.findByIdAndUpdate(req.params.id,{bookingStatus: 0});
       res.status(200).json(updatedBooking);
       console.log('>>Cancel booking success')
     } catch (err) {

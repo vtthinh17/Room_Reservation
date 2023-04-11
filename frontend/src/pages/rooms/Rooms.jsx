@@ -46,16 +46,14 @@ const Reservations = () => {
 
     // ----------------filter price------------------------
     // initstate = highest price de hien thi tat ca room
-    const [priceFilter, setPriceFilter] = useState(400);
+    const [priceFilter, setPriceFilter] = useState(500);
     const handleSelectPriceFilter = (e) => {
         console.log('Gia tien', e.target.value)
         setPriceFilter(e.target.value)
     }
     // search
     const getFilter = async () => {
-        // const {query} = useFetch(`/rooms`);
         const query = await instance.get(`/rooms/getRoomByQuery?roomType=${roomType}&max=${priceFilter}`)
-        console.log("list query:", query.data);
         setRoomList(query.data);
     }
     const [modal, setModal] = useState(false);
@@ -70,8 +68,6 @@ const Reservations = () => {
     const [disableList, setDisableList] = useState([]);
 
     const handleConfirmBooking = async () => {
-        // check room date is available
-
         setNestedModal(!nestedModal);
         setCloseAll(false);
         try {
@@ -79,15 +75,15 @@ const Reservations = () => {
                 roomID: choosenRoom._id,
                 userID: JSON.parse(localStorage.getItem("user"))._id,
                 dateServe: { startServe: date[0].startDate, endServe: date[0].endDate },
-                totalPrice: choosenRoom.price * (date[0].endDate.getDate() - date[0].startDate.getDate() + 1),
+                totalPrice: choosenRoom.price * (getDates(date[0].startDate, date[0].endDate).length),
                 bookingAt: new Date(),
             })
             instance.put('/rooms/addDateServe/' + choosenRoom._id, { startServe: date[0].startDate, endServe: date[0].endDate })
             reFetch()
-            console.log("Insert new booking success!!!")
         } catch (error) {
-            console.log("Insert new booking error:", error)
+            console.log(error)
         }
+
     }
 
     function getDates(startDate, stopDate) {
@@ -101,34 +97,25 @@ const Reservations = () => {
     }
 
     const handleClick = (room) => {
-        // toggle()
         setModal(!modal)
         setChoosenRoom(room)
-        // var daterange = room.dateServe.map((e,index)=>{
-        //     range(e.startDate.slice(''))
-        // })
         let disableDateList = [];
         room.dateServe.forEach(element => {
 
             disableDateList = disableDateList.concat(getDates(element.startServe, element.endServe));
         });
         setDisableList(disableDateList)
-        console.log("cac ngay da duoc dat truoc cua phong duoc chon: ", disableDateList)
     }
-    console.log("schedule: ", date)
     return (
         <div className="reservation">
             <div>
-                {/* fetch data every render(model onclick => render => fetch data => many render(violation rule react limited render)) */}
                 <Modal isOpen={modal} >
                     <ModalHeader>Room {choosenRoom.roomNumber}</ModalHeader>
-                    {/* {console.log(choosenRoom.dateServe)} */}
                     <div className="searchBar_date">
                         <FontAwesomeIcon icon={faCalendarDays} />
                         <span onClick={() => setOpenDate(!openDate)}>Set your schedule: {`${format(date[0].startDate, "dd/MM/yyyy")} to ${format(date[0].endDate, "dd/MM/yyyy")}`} </span>
                         {openDate && <DateRange
                             minDate={new Date()}
-                            // [get dateServe list from Room => date start form 0 => date.getDay()+1]
                             disabledDates={disableList}
                             editableDateInputs={true}
                             onChange={item => setDate([item.selection])}
@@ -152,8 +139,8 @@ const Reservations = () => {
                                     )}
                                 </ul>
                                 <span className="text-center">
-                                    Price: {choosenRoom.price}$ x {(date[0].endDate.getDate() - date[0].startDate.getDate()) + 1}
-                                    = <b>{choosenRoom.price * (date[0].endDate.getDate() - date[0].startDate.getDate() + 1)}</b>$
+                                    Price: {choosenRoom.price}$ x {getDates(date[0].startDate, date[0].endDate).length}
+                                    = <b>{choosenRoom.price * getDates(date[0].startDate, date[0].endDate).length}</b>$
                                 </span>
                             </div>
                         </div>
@@ -171,7 +158,6 @@ const Reservations = () => {
                         </Modal>
                     </ModalBody>
                     <ModalFooter>
-                        {/* xu ly  createOrderBooking  */}
                         <Button color="success" onClick={handleConfirmBooking}>
                             Booking
                         </Button>
@@ -194,7 +180,6 @@ const Reservations = () => {
                     ? (<h3 className='text-center'>Loading data...</h3>)
                     : (
                         <>
-                            {/* {console.log(">>>fetch Room datas:", data)} */}
                             <div className="searchBar">
                                 <h2 >Filter</h2>
                                 {/* room type filter */}
@@ -216,14 +201,12 @@ const Reservations = () => {
                                         type='range'
                                         onChange={e => handleSelectPriceFilter(e)}
                                         min={20}
-                                        max={400}
+                                        max={500}
                                         step={20}
                                         value={priceFilter}
                                         className='custom-slider'>
                                     </input>
                                 </div>
-
-
 
                                 <div>
                                     <button className="searchBar_button" onClick={getFilter}>Search</button>
@@ -249,7 +232,6 @@ const Reservations = () => {
                         </>
                     )
             }
-            {/* if have error */}
             {
                 error && <div>Message from error: {error}</div>
             }
