@@ -1,6 +1,6 @@
 import { React, useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { Container, Row, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Container, Row, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledTooltip } from 'reactstrap';
 import useFetch from "../../hooks/useFetch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
@@ -23,14 +23,17 @@ const User = () => {
         setChoosenUser(user)
     }
     const handleDelete = async () => {
-       try {
-        await instance.delete("/users/" + choosenUser._id);
-        toggle()
-        reFetch();
-       } catch (error) {
-        
-       }
-        
+        if (window.confirm('Do you want to delete this room?') === true) {
+            try {
+                await instance.delete("/users/" + choosenUser._id);
+                toggle()
+                reFetch();
+               } catch (error) {
+                
+               }
+        } else {
+
+        }
     }
     return (
         <div className="User">
@@ -61,7 +64,13 @@ const User = () => {
                                         {user.address ? <td>{user.address}</td> : <td style={{ textAlign: "center" }}>...</td>}
                                         {user.phone ? <td>{user.phone}</td> : <td style={{ textAlign: "center" }}>...</td>}
                                         <td>
-                                            <FontAwesomeIcon onClick={() => handleClick(user)} icon={faTrashCan} />
+                                            <FontAwesomeIcon id='UncontrolledTooltipExample' onClick={() => handleClick(user)} icon={faTrashCan} />
+                                            <UncontrolledTooltip
+                                                    placement="top"
+                                                    target="UncontrolledTooltipExample"
+                                                >
+                                                    Delete this user ?
+                                                </UncontrolledTooltip>
                                         </td>
                                     </tr>
                                 )}
@@ -87,7 +96,7 @@ const User = () => {
                     }
 
                 </Container>)
-                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "red" }}>You need to login first!</div>
+                : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "grey" }}>You need to login first!</div>
             }
         </div>
     )

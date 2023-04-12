@@ -79,3 +79,7 @@
     font-weight: 700;
 
 }
+.confirmNotify_approve a{
+    text-decoration: none;
+    color: white;
+}

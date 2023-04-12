@@ -19,7 +19,7 @@ const Dashboard = () => {
     const countNotifyOrder = dataBookingOrder.data.filter(element => element.bookingStatus === 1)
     const countNotifyFeedback = dataFeedback.data.filter(element => element.isDisplay === false)
     var revenue=0;
-    dataBookingOrder.data.filter(element => element.bookingStatus === 2?revenue+=element.totalPrice : 0)
+    dataBookingOrder.data.filter(element => element.bookingStatus === 0?revenue+=element.totalPrice : 0)
     const options = {
         animationEnabled: true,
         title: {
@@ -96,20 +96,24 @@ const Dashboard = () => {
                                             <div className="confirmNotify_number">{countNotifyOrder.length}</div>
                                             <div className="confirmNotify_message">Order waiting confirm</div>
                                             <div onClick={handleConfirm} className="confirmNotify_approve">
-                                                Approve now
+                                               <Link to='/bookingorder'>
+                                               Go to confirm
                                                 <span className="approveIcon">
                                                     <FontAwesomeIcon icon={faCalendarCheck} />
                                                 </span>
+                                               </Link>
                                             </div>
                                         </div>
                                         <div className="confirmNotify">
                                             <div className="confirmNotify_number">{countNotifyFeedback.length}</div>
                                             <div className="confirmNotify_message">Feedback waiting confirm</div>
                                             <div onClick={handleConfirm} className="confirmNotify_approve">
-                                                Approve now
+                                              <Link to='/feedback'>
+                                              Go to confirm
                                                 <span className="approveIcon">
                                                     <FontAwesomeIcon icon={faFileCircleCheck} />
                                                 </span>
+                                              </Link>
                                             </div>
                                         </div>
                                     </div>

@@ -1,6 +1,15 @@
 import Room from "../models/Room.js";
 export const createRoom = async (req, res) => {
-  const newRoom = new Room(req.body)
+  let newService =  req.body.description.split(",").map(item => item.trim())
+  const newRoom = new Room({
+    roomType: req.body.roomType,
+    roomNumber: req.body.roomNumber,
+    price: req.body.price,
+    image: req.body.image,
+    description:newService,
+    dateServe:[],
+
+  })
   try {
     const savedRoom = await newRoom.save()
     res.status(200).json(savedRoom);
@@ -11,6 +20,17 @@ export const createRoom = async (req, res) => {
 }
 
 export const updateRoom = async (req, res) => {
+  try {
+    console.log(req.body);
+    const updatedRoom = await Room.findByIdAndUpdate(req.params.id,req.body);
+    res.status(200).json(updatedRoom);
+    console.log('>>Update room success')
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const addNewService = async (req, res) => {
   try {
     console.log(req.body);
     const updatedRoom = await Room.findByIdAndUpdate(req.params.id,  { $push: { description: req.body.description } },
@@ -29,6 +49,18 @@ export const removeDateServe = async (req, res) => {
     );
     res.status(200).json(updatedRoom);
     console.log('>>Remove date serve of booking room success')
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const removeService = async (req, res) => {
+  try {
+    console.log(req.body.data);
+    const updatedRoom = await Room.findByIdAndUpdate(req.params.id,  { $pull:  {description: req.body.data}  },
+    );
+    res.status(200).json(updatedRoom);
+    console.log('>>Remove room service => Ok')
   } catch (err) {
     console.log(err);
   }
