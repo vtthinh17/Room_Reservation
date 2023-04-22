@@ -22,7 +22,7 @@ export const updateBooking = async (req, res) => {
 
 export const cancelBooking = async (req, res) => {
     try {
-      const updatedBooking = await Booking.findByIdAndUpdate(req.params.id,{bookingStatus: 0});
+      const updatedBooking = await Booking.findByIdAndUpdate(req.params.id,{bookingStatus: 2});
       res.status(200).json(updatedBooking);
       console.log('>>Cancel booking success')
     } catch (err) {
@@ -38,8 +38,23 @@ export const cancelBooking = async (req, res) => {
       } catch (err) {
         next(err);
       }
-
   };
+
+  export const deleteBookingOfDeletedRoom = async (req, res) => {
+    try {
+
+      console.log("danh sach orders se xoa cung phong",req.body);
+      let ids = req.body.map((item) => item._id);
+      let filter = {'_id': {$in: ids}}
+      await Booking.deleteMany(filter);
+      res.status(200).json("Booking has been deleted.");
+      console.log('>>Booking has been deleted!')
+      } catch (err) {
+        console.log(err)
+        // next(err);
+      }
+  };
+
   export const getBooking = async (req, res, next) => {
     try {
       const booking = await Booking.findById(req.params.id);
@@ -49,6 +64,7 @@ export const cancelBooking = async (req, res) => {
       next(err);
     }
   };
+  
 
   export const getBookings = async (req, res, next) => {
     try {
@@ -67,6 +83,16 @@ export const cancelBooking = async (req, res) => {
   export const getBookingByUserID = async (req, res, next) => {
     try {
      const bookings = await Booking.find({userID:req.params.id})
+      res.status(200).json(bookings);
+      console.log('>> Get by query success!')
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  export const getBookingByRoomID = async (req, res, next) => {
+    try {
+     const bookings = await Booking.find({roomID:req.params.id})
       res.status(200).json(bookings);
       console.log('>> Get by query success!')
     } catch (err) {

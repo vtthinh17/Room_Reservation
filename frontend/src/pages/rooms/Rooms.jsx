@@ -23,12 +23,13 @@ const Reservations = () => {
         [data]);
     // ----------Filter------------------
     const roomOptions = [
+        { value: 0, label: 'All rooms' },
         { value: 1, label: 'Single' },
         { value: 2, label: 'Couple' },
         { value: 3, label: 'Family' },
     ];
     // -----------filter Room type-------------------
-    const [roomType, setRoomType] = useState(1);
+    const [roomType, setRoomType] = useState(0);
     const handleSelectRoomType = (type) => {
         console.log('Loai phong', type)
         setRoomType(type)
@@ -53,8 +54,14 @@ const Reservations = () => {
     }
     // search
     const getFilter = async () => {
-        const query = await instance.get(`/rooms/getRoomByQuery?roomType=${roomType}&max=${priceFilter}`)
-        setRoomList(query.data);
+        if(roomType!==0){
+            const query = await instance.get(`/rooms/getRoomByQuery?roomType=${roomType}&max=${priceFilter}`)
+            setRoomList(query.data);
+        }else{
+            const query = await instance.get(`/rooms/getRoomByQuery?max=${priceFilter}`)
+            setRoomList(query.data);
+        }
+        
     }
     const [modal, setModal] = useState(false);
     const [nestedModal, setNestedModal] = useState(false);
@@ -161,7 +168,7 @@ const Reservations = () => {
                         <Button color="success" onClick={handleConfirmBooking}>
                             Booking
                         </Button>
-                        <Button color="dark" onClick={toggle}>
+                        <Button color="secondary" onClick={toggle}>
                             Cancel
                         </Button>
                     </ModalFooter>

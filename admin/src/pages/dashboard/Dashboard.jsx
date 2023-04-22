@@ -78,7 +78,7 @@ const Dashboard = () => {
         <div>
             {user ?
                 <Container className="Dashboard">
-                       {dataFeedback.data.length>0 && dataUser.data.length>0 && dataRoom.data.length>0? 
+                       {/* {dataFeedback.data.length>0 && dataUser.data.length>0 && dataRoom.data.length>0?  */}
                        <div>
                         <Row>
                             <Link to='/rooms' className="widget_links col-3"><Widget type="Room" backgroundColor="#b3c6ff" icon={faHouseUser} countItem={dataRoom.data.length} /></Link>
@@ -132,12 +132,11 @@ const Dashboard = () => {
                         <div>
                             <div className="title">Statistics Chart</div>
                             <CanvasJSChart options={options}
-                            /* onRef={ref => this.chart = ref} */
                             />
                         </div>
                        </div>
-                       :<div className="spinner" style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Loading data...</div>
-                       }
+                       {/* :<div className="spinner" style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Loading data...</div> */}
+                       {/* } */}
                 </Container>
                 : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "grey" }}>You need to login first!</div>
             }

@@ -73,6 +73,9 @@
     right: 0;
     cursor:pointer
 }
+.rdrCalendarWrapper{
+    top: 100px;
+}
 .fa-calendar-days{
     font-size: 20px;
     color: rgb(45, 174, 45);

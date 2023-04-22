@@ -1,18 +1,19 @@
 import { React, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import './rooms.css'
-import { Container, Row, Table, Button, Input, FormGroup, Label, Form, Col, UncontrolledTooltip } from 'reactstrap';
+import { Container, Row, Table, Button, Input, FormGroup, Label, Form, Col, UncontrolledTooltip, } from 'reactstrap';
 import useFetch from "../../hooks/useFetch";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { faEdit, faTrashCan, faPlus, faCircleCheck, faSquareXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import instance from "../../service";
 import Select from 'react-select';
+import { toast } from 'react-toastify';
 const Rooms = () => {
     const { user, dispatch } = useContext(AuthContext);
     const { data, reFetch } = useFetch("/rooms/")
     const [dataRoom, setDataRoom] = useState({});
-    const [roomsv,setRoomsv] = useState([])
+    const [roomsv, setRoomsv] = useState([])
     const [choosenRoom, setChoosenRoom] = useState({});
 
     useEffect(() => {
@@ -22,7 +23,7 @@ const Rooms = () => {
             setChoosenRoom(newData);
             setRoomsv(newData.description);
         }
-    },[data, choosenRoom, roomsv]);
+    }, [data, choosenRoom, roomsv]);
     // edit
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
@@ -37,6 +38,21 @@ const Rooms = () => {
         setNestedModal(!nestedModal);
         setCloseAll(true);
     };
+
+    const [modal1, setModal1] = useState(false);
+    const toggle1 = () => setModal1(!modal1);
+    const [nestedModal1, setNestedModal1] = useState(false);
+    const [closeAll1, setCloseAll1] = useState(false);
+
+    const toggleNested1 = () => {
+        setNestedModal1(!nestedModal1);
+        setCloseAll1(false);
+    };
+    const toggleAll1 = () => {
+        setNestedModal1(!nestedModal1);
+        setCloseAll1(true);
+    };
+
     const handleClick = (room) => {
         toggle()
         setChoosenRoom(room)
@@ -50,42 +66,73 @@ const Rooms = () => {
     const [newService, setNewService] = useState({});
     const handleChange = (e) => {
         setEditRoom((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-        setNewService({description: e.target.value})
+        setNewService({ description: e.target.value })
         console.log(editRoom)
     };
+    const [errorMsg, setErrorMsg] = useState('')
     const handleEditRoom = async (e) => {
         e.preventDefault();
         console.log({ ...editRoom, roomType: roomType })
-        try {
-            await instance.put('/rooms/update/' + choosenRoom._id, { ...editRoom, roomType: roomType })
-            reFetch()
-            toggleAll()
-        } catch (error) {
-            console.log(error)
-        }
+        if (editRoom.roomNumber)
+            try {
+                await instance.put('/rooms/update/' + choosenRoom._id, { ...editRoom, roomType: roomType })
+                reFetch()
+                toggleAll()
+            } catch (error) {
+                console.log(error)
+            }
     }
     const handleChangeService = (e) => {
-        setNewService({description: e.target.value})
+        setNewService({ description: e.target.value })
         console.log(editRoom)
     };
-    
+
     const handleChangeAdd = (e) => {
         setNewRoom((prev) => ({ ...prev, [e.target.id]: e.target.value }));
         console.log(newRoom)
     };
-    const handleDelete = async (room) => {
-        console.log(room)
-        if (window.confirm('Do you want to delete this room?') === true) {
-            try {
-                await instance.delete('/rooms/delete/' + room._id)
-                reFetch()
 
-            } catch (error) {
-                console.log(error)
+    const handleDelete = async (room) => {
+        const roomOrders = await instance.get('/booking/roomID/' + room._id)
+        let isAvailableForDelete = true
+        let deleteList = []
+        roomOrders.data.forEach(element => {
+            if (element.bookingStatus === 0 || element.bookingStatus === 1) {
+                // Neu co booking order phai phuc vu hoac chua xac nhan => Khong the xoa
+                isAvailableForDelete = false
+            } else {
+                // Nguoc lai neu toan danh sach order bi huy(cancel) => them booking order vao list de xoa
+                deleteList.push(element)
+            }
+        })
+
+
+        if (isAvailableForDelete) {
+            if (window.confirm('Do you want to delete this room?') === true) {
+                try {
+                    if (deleteList.length > 0) {
+                        // delete booking order of this Room & delete Room
+                        console.log("danh sach order se xoa cung phong", deleteList)
+                        await instance.delete('/booking/deleteMany/', { data: deleteList })
+                        await instance.delete('/rooms/delete/' + room._id)
+                        reFetch()
+                    } else {
+                        // No booking order => delete Room only
+                        await instance.delete('/rooms/delete/' + room._id)
+                        // console.log("xoa phong")
+                        reFetch()
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+            } else {
+                // Nothing to do
             }
         } else {
-
+            alert(`Room is in serving status. Can't delete this room!`)
         }
+
     }
     const [newRoom, setNewRoom] = useState({
         roomNumber: 0,
@@ -93,35 +140,38 @@ const Rooms = () => {
         image: '',
         description: ''
     })
-    const [displayAddForm, setDisplayAddForm] = useState(false)
     const toggleAdd = () => {
-        setDisplayAddForm(true)
-        console.log("add")
+        setModal1(true)
     };
     const handleAdd = async () => {
-        try {
-            await instance.post('/rooms/create', { ...newRoom, roomType: roomType })
-            setAddRoomMessage(true)
-            reFetch()
-            setDisplayAddForm(false)
-        } catch (error) {
+        if (newRoom.roomNumber !== 0 && newRoom.price !== 0 && newRoom.image !== '' && newRoom.description !== '') {
+            try {
+                await instance.post('/rooms/create', { ...newRoom, roomType: roomType })
+                toggleAll1()
+                reFetch()
+            } catch (error) {
+                console.log(error)
+                toast.error('Existed room number, please try another room number')
 
+            }
+        } else {
+            toast.error('Please fill in all the fields')
         }
     };
     const handleAddService = async () => {
         try {
-            await instance.put('/rooms/addNewService/'+choosenRoom._id,newService)
+            await instance.put('/rooms/addNewService/' + choosenRoom._id, newService)
             reFetch()
         } catch (error) {
 
         }
     };
-    const handleRemoveService = async (element) =>{
-       
+    const handleRemoveService = async (element) => {
+
         try {
             console.log(element)
-            await instance.put('/rooms/removeService/'+choosenRoom._id, {data: element})
-            
+            await instance.put('/rooms/removeService/' + choosenRoom._id, { data: element })
+
             reFetch()
         } catch (error) {
             console.log(error)
@@ -147,10 +197,12 @@ const Rooms = () => {
                                         <Button color="success" onClick={() => setAddRoomMessage(false)}>Ok</Button>
                                     </div>
                                 </div>}
-                                {/* Add room form */}
-                            {displayAddForm &&
-                                <div className="addform-container">
-                                    <Form className="addform">
+
+
+                            <Modal isOpen={modal1} toggle={toggle1}>
+                                <ModalHeader>Add room {choosenRoom.roomNumber}</ModalHeader>
+                                <ModalBody>
+                                    <Form>
                                         <h3 className="text-center">Add Room Form</h3>
                                         <Row>
                                             <FormGroup>
@@ -221,21 +273,35 @@ const Rooms = () => {
                                                 />
                                             </FormGroup>
                                         </Row>
-                                        <Row>
-                                            <Col>
-                                                <Button color="primary" onClick={handleAdd}>
-                                                    Save
-                                                </Button>
-                                            </Col>
-                                            <Col>
-                                                <Button color="secondary" onClick={() => { setDisplayAddForm(false) }}>
-                                                    Cancel
-                                                </Button>
-                                            </Col>
-                                        </Row>
 
                                     </Form>
-                                </div>}
+
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="primary" onClick={handleAdd}>
+                                        Save
+                                    </Button>
+
+                                    <Modal
+                                        isOpen={nestedModal1}
+                                        toggle={toggleNested1}
+                                        onClosed={closeAll1 ? toggle1 : undefined}
+                                    >
+                                        <ModalHeader><FontAwesomeIcon icon={faCircleCheck} /></ModalHeader>
+                                        <ModalBody className="text-center" style={{ fontSize: "28px" }}>Add room success!</ModalBody>
+                                        <ModalFooter>
+                                            <Button color="secondary" onClick={toggleAll1}>
+                                                Ok
+                                            </Button>
+                                        </ModalFooter>
+
+                                    </Modal>
+                                    <Button onClick={toggle1}>
+                                        Cancel
+                                    </Button>
+                                </ModalFooter>
+                            </Modal>
+
                             <Table striped>
                                 <thead>
                                     <tr>
@@ -266,7 +332,13 @@ const Rooms = () => {
                                                 </ul>
                                             </td>
                                             <td>
-                                                <FontAwesomeIcon onClick={() => handleClick(room)} icon={faEdit} />
+                                                <FontAwesomeIcon id='UncontrolledTooltipEdit' onClick={() => handleClick(room)} icon={faEdit} />
+                                                <UncontrolledTooltip
+                                                    placement="top"
+                                                    target="UncontrolledTooltipEdit"
+                                                >
+                                                    Update room infomation
+                                                </UncontrolledTooltip>
                                                 <FontAwesomeIcon id='UncontrolledTooltipExample' onClick={() => handleDelete(room)} icon={faTrashCan} />
                                                 <UncontrolledTooltip
                                                     placement="top"
@@ -312,14 +384,14 @@ const Rooms = () => {
                                             <Col md={6}>
                                                 Current services:
                                                 <br />
-                                                {roomsv.map((element,index)=>
-                                                <ul key={index}>
-                                                    <Row>
-                                                        <Col md={10}><li>{element}</li></Col>
-                                                        <Col md={2}><FontAwesomeIcon onClick={() => handleRemoveService(element)} icon={faSquareXmark} /></Col>
-                                                    </Row>
-                                                    
-                                                </ul> 
+                                                {roomsv.map((element, index) =>
+                                                    <ul key={index}>
+                                                        <Row>
+                                                            <Col md={10}><li>{element}</li></Col>
+                                                            <Col md={2}><FontAwesomeIcon onClick={() => handleRemoveService(element)} icon={faSquareXmark} /></Col>
+                                                        </Row>
+
+                                                    </ul>
                                                 )}
                                             </Col>
                                             <Col md={6}>
@@ -334,7 +406,7 @@ const Rooms = () => {
                                                         placeholder="Add new room service"
                                                     />
                                                 </FormGroup>
-                                                <span className="nut" onClick={handleAddService}>Add <FontAwesomeIcon icon={faPlus}/> </span>
+                                                <span className="nut" onClick={handleAddService}>Add <FontAwesomeIcon icon={faPlus} /> </span>
                                             </Col>
                                         </Row>
                                         <FormGroup>
@@ -375,7 +447,108 @@ const Rooms = () => {
                             </Modal>
 
                         </Row>
-                        : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Loading data...</div>
+                        : <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                            <span style={{ fontSize: "40px", height: "40vh", display: "flex", alignItems: "center", justifyContent: "center" }}>Nothing to display</span>
+                            <div><Button color="primary" onClick={toggleAdd}>Add room <FontAwesomeIcon icon={faPlus} /></Button></div>
+                            {addRoomMessage &&
+                                <div className="AddRoomSuccess-container">
+                                    <div className="AddRoomSuccess">
+                                        <h2 className="text-center" style={{ color: "green" }}>Add room success</h2>
+                                        <Button color="success" onClick={() => setAddRoomMessage(false)}>Ok</Button>
+                                    </div>
+                                </div>}
+                            {/* Add room form */}
+                            {/* {displayAddForm && */}
+                            <div className="addform-container">
+                                <Form className="addform">
+                                    <h3 className="text-center">Add Room Form</h3>
+                                    <Row>
+                                        <FormGroup>
+                                            <Label for="roomType">
+                                                Room type
+                                            </Label>
+                                            <Select
+                                                placeholder='Select room type'
+                                                value={roomOptions.value}
+                                                onChange={e => handleSelectRoomType(e.value)}
+                                                options={roomOptions}
+                                                className='roomTypeInput'
+                                            />
+                                        </FormGroup>
+                                    </Row>
+                                    <Row>
+                                        <Col md={6}>
+                                            <FormGroup className="">
+                                                <Label for="roomNumber">
+                                                    Room Number
+                                                </Label>
+                                                <Input
+                                                    onChange={handleChangeAdd}
+                                                    id="roomNumber"
+                                                    name="roomNumber"
+                                                    placeholder="Enter room number..."
+                                                />
+
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md={6}>
+                                            <FormGroup>
+                                                <Label for="price">
+                                                    Price
+                                                </Label>
+                                                <Input
+                                                    onChange={handleChangeAdd}
+                                                    id="price"
+                                                    name="price"
+                                                    placeholder="Room price..."
+                                                />
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <FormGroup>
+                                            <Label for="image">
+                                                Room Image
+                                            </Label>
+                                            <Input
+                                                onChange={handleChangeAdd}
+                                                id="image"
+                                                name="image"
+                                                placeholder="Paste your room image URL"
+                                            />
+                                        </FormGroup>
+                                    </Row>
+                                    <Row>
+                                        <FormGroup>
+                                            <Label for="description">
+                                                Room services
+                                            </Label>
+                                            <Input
+                                                onChange={handleChangeAdd}
+                                                id="description"
+                                                name="description"
+                                                placeholder="Room services..."
+                                            />
+                                        </FormGroup>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Button color="primary" onClick={handleAdd}>
+                                                Save
+                                            </Button>
+                                        </Col>
+                                        <Col>
+                                            <Button color="secondary" onClick={toggle1}>
+                                                Cancel
+                                            </Button>
+                                        </Col>
+                                        {errorMsg && <div style={{ color: "red" }}>Please fill in all the fields</div>}
+                                    </Row>
+
+                                </Form>
+                            </div>
+                            {/* } */}
+                        </div>
                     }
                 </Container>)
                     : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh", color: "grey" }}>You need to login first!</div>

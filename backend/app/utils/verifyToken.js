@@ -3,7 +3,6 @@ import { generateError } from "./generateErr.js"
 // middleware
 export const verifyToken = (req, res, next) => {
     const token = req.headers.authorization ? req.headers.authorization : '';
-    // const token = req.cookies ? req.cookies.access_token:'';
     if (!token) {
       return next(generateError(401, "You are not authenticated!"));
     }
@@ -17,8 +16,6 @@ export const verifyToken = (req, res, next) => {
   };
   
   export const verifyUser = (req, res, next) => {
-    // verify Token first
-    console.log("123");
     verifyToken(req, res,next, () => {
       if (req.user.id === req.params.id) {
         console.log(">>userID is true")

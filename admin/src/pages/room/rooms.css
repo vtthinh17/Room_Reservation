@@ -34,25 +34,25 @@
     color: #42f599;
 }
 .addform-container{
+    top: 60px;
     background-color: rgba(39, 34, 34, 0.5);
-    position: fixed;
-    height: 30rem;
     /* width: 100%; */
+    position: absolute;
+    height: 30rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .addform{
-    /* margin-right: 15px; */
     padding: 2rem 15rem;
     background-color: white;
     position: relative;
 }
 .AddRoomSuccess-container{
+    
     background-color: rgba(39, 34, 34, 0.5);
     position: fixed;
     height: 30rem;
-    /* width: 100%; */
     display: flex;
     align-items: center;
     justify-content: center;

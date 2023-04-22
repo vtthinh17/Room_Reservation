@@ -52,7 +52,6 @@ function Feedback() {
         try {
             await instance.post("/feedbacks/", { ...feedback, rating: rating,writingAt: format(new Date(), "hh:mm dd/MM/yyyy") });
             console.log("Insert new feedback into database success!!! >>>", { ...feedback, rating: rating })
-            // reset Input value => set value =""
             toggle()
         } catch (err) {
             setMsgError(true)

@@ -14,8 +14,7 @@ const BookingOrder = () => {
     },
         [data]);
     const handleConfirm = async (selectedBookingOrder) => {
-        // console.log("selected booking:",selectedBookingOrder)
-        await instance.put("/booking/update/" + selectedBookingOrder._id, { bookingStatus: 2 });
+        await instance.put("/booking/update/" + selectedBookingOrder._id, { bookingStatus: 0 });
         reFetch();
     }
     const handleDelete = async (selectedBookingOrder) => {
@@ -25,8 +24,8 @@ const BookingOrder = () => {
                 reFetch();
             } catch (error) {
             }
-        } else {}
-      
+        } else { }
+
     }
     return (
         <div className="BookingOrder">
@@ -39,7 +38,7 @@ const BookingOrder = () => {
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>UserID</th>
+                                        <th>BookingID</th>
                                         <th>Dates serve</th>
                                         <th>TotalPrice</th>
                                         <th>Booking time</th>
@@ -50,9 +49,11 @@ const BookingOrder = () => {
                                     {dataBookingOrder.map((booking, index) =>
                                         <tr key={index}>
                                             <th>{index + 1}</th>
-                                            <td>{booking.userID}</td>
-                                            <td>from {booking.dateServe.startServe} to {booking.dateServe.endServe}</td>
+                                            <td>{booking._id}</td>
                                             <td>{booking.totalPrice}$</td>
+                                            <td>
+                                                from {(new Date(booking.dateServe.startServe)).getDate()}/{(new Date(booking.dateServe.startServe)).getMonth() + 1}/{(new Date(booking.dateServe.startServe)).getFullYear()} to {(new Date(booking.dateServe.endServe)).getDate()}/{(new Date(booking.dateServe.endServe)).getMonth() + 1}/{(new Date(booking.dateServe.endServe)).getFullYear()}
+                                            </td>
                                             <td>{booking.bookingAt}</td>
 
                                             <>
@@ -63,14 +64,18 @@ const BookingOrder = () => {
                                                     <td><Button color="warning" onClick={() => handleConfirm(booking)}>Confirm</Button></td> : null
                                                 }
                                                 {booking.bookingStatus === 2 ?
-                                                    <td><span style={{ color: "red" }}>Cancel <FontAwesomeIcon id="UncontrolledTooltipExample" onClick={() => handleDelete(booking)} icon={faTrashCan} /></span></td> : null
+                                                    <td>
+                                                        <UncontrolledTooltip
+                                                            placement="top"
+                                                            target="UncontrolledTooltipExample"
+                                                        >
+                                                            Delete this order?
+                                                        </UncontrolledTooltip>
+                                                        <span style={{ color: "red" }}>Cancel <FontAwesomeIcon id="UncontrolledTooltipExample" onClick={() => handleDelete(booking)} icon={faTrashCan} /></span>
+                                                    </td> : null
+
                                                 }
-                                                <UncontrolledTooltip
-                                                    placement="top"
-                                                    target="UncontrolledTooltipExample"
-                                                >
-                                                    Delete this order?
-                                                </UncontrolledTooltip>
+
                                             </>
                                         </tr>
 
@@ -78,7 +83,7 @@ const BookingOrder = () => {
                                 </tbody>
                             </Table >
                         </Row>
-                        : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Loading data...</div>
+                        : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px", height: "100vh" }}>Nothing to display</div>
                     }
                 </Container>
                 )
