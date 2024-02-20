@@ -1,1 +1,1 @@
-Booking room website building by MREN stack
+Booking room website building by MERN stack
